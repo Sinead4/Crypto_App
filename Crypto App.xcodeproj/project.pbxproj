@@ -11,6 +11,13 @@
 		2329D02F294A1341009DF171 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2329D02E294A1341009DF171 /* ContentView.swift */; };
 		2329D031294A1343009DF171 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D030294A1343009DF171 /* Assets.xcassets */; };
 		2329D034294A1343009DF171 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D033294A1343009DF171 /* Preview Assets.xcassets */; };
+		23A5048E2954736D0096FB34 /* CryptoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5048D2954736D0096FB34 /* CryptoAppTests.swift */; };
+		23A5048F2954736D0096FB34 /* CryptoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5048D2954736D0096FB34 /* CryptoAppTests.swift */; };
+		23A50493295474AC0096FB34 /* DataStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A50492295474AC0096FB34 /* DataStructure.swift */; };
+		23A504952954752F0096FB34 /* misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A504942954752F0096FB34 /* misc.swift */; };
+		23A504972954755D0096FB34 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A504962954755D0096FB34 /* Service.swift */; };
+		23A5049A295475C90096FB34 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A50499295475C90096FB34 /* ViewModel.swift */; };
+		23A5049C295475DA0096FB34 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5049B295475DA0096FB34 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +45,12 @@
 		2329D033294A1343009DF171 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2329D039294A1344009DF171 /* Crypto AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Crypto AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2329D043294A1344009DF171 /* Crypto AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Crypto AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23A5048D2954736D0096FB34 /* CryptoAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoAppTests.swift; sourceTree = "<group>"; };
+		23A50492295474AC0096FB34 /* DataStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructure.swift; sourceTree = "<group>"; };
+		23A504942954752F0096FB34 /* misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = misc.swift; sourceTree = "<group>"; };
+		23A504962954755D0096FB34 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		23A50499295475C90096FB34 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		23A5049B295475DA0096FB34 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				2329D02B294A1341009DF171 /* Crypto App */,
+				23A5048C2954731F0096FB34 /* CryptoAppTests */,
 				2329D02A294A1341009DF171 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +100,11 @@
 		2329D02B294A1341009DF171 /* Crypto App */ = {
 			isa = PBXGroup;
 			children = (
+				23A50498295475850096FB34 /* Internet */,
 				2329D02C294A1341009DF171 /* Crypto_AppApp.swift */,
 				2329D02E294A1341009DF171 /* ContentView.swift */,
+				23A50499295475C90096FB34 /* ViewModel.swift */,
+				23A5049B295475DA0096FB34 /* Model.swift */,
 				2329D030294A1343009DF171 /* Assets.xcassets */,
 				2329D032294A1343009DF171 /* Preview Content */,
 			);
@@ -100,6 +117,24 @@
 				2329D033294A1343009DF171 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		23A5048C2954731F0096FB34 /* CryptoAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				23A5048D2954736D0096FB34 /* CryptoAppTests.swift */,
+			);
+			path = CryptoAppTests;
+			sourceTree = "<group>";
+		};
+		23A50498295475850096FB34 /* Internet */ = {
+			isa = PBXGroup;
+			children = (
+				23A50492295474AC0096FB34 /* DataStructure.swift */,
+				23A504942954752F0096FB34 /* misc.swift */,
+				23A504962954755D0096FB34 /* Service.swift */,
+			);
+			path = Internet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +208,7 @@
 					};
 					2329D038294A1344009DF171 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1410;
 						TestTargetID = 2329D028294A1341009DF171;
 					};
 					2329D042294A1344009DF171 = {
@@ -232,8 +268,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23A504952954752F0096FB34 /* misc.swift in Sources */,
 				2329D02F294A1341009DF171 /* ContentView.swift in Sources */,
+				23A50493295474AC0096FB34 /* DataStructure.swift in Sources */,
+				23A5048E2954736D0096FB34 /* CryptoAppTests.swift in Sources */,
 				2329D02D294A1341009DF171 /* Crypto_AppApp.swift in Sources */,
+				23A504972954755D0096FB34 /* Service.swift in Sources */,
+				23A5049A295475C90096FB34 /* ViewModel.swift in Sources */,
+				23A5049C295475DA0096FB34 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23A5048F2954736D0096FB34 /* CryptoAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,14 +485,21 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.FHNW.Crypto-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Crypto App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Crypto App";
@@ -461,10 +511,16 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.FHNW.Crypto-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
