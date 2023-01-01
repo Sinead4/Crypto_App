@@ -6,31 +6,95 @@
 //
 
 import Foundation
+import SwiftUI
 
-extension ContentView {
+extension CoinListView {
     
     class ViewModel: ObservableObject {
-        @Published var posts: [DummyPostStructure] = []
+        @Published var posts: [DummyPingStructure] = []
+        @Published var coinListVM: [coin] = []
         
-        var model = Model()
+        var model = CoinModel()
+        let coinURL: URL
         
-        func setDataService(_ dataService: DataServiceProtocol) {
-            model.dataService = dataService
+        init(){
+            print("in init")
+            coinURL = URL(string: "https://api.coingecko.com/api/v3/coins/list")!
         }
         
-        func reload() {
-            model.fetch { [self] result in
-                switch result {
-                case .success():
-                    // Add model data to vm data
+        func loadCoins(){
+            
+            URLSession.shared.dataTask(with: self.coinURL){
+                data, response,error in
+                
+                print("in task background")
+                if let response = response as? HTTPURLResponse {
+                    if response.statusCode >= 300 {
+                        print("status grösser als 300")
+                        //                        completionHandler(.failure(.httpError(response.statusCode)))
+                        return
+                    }
+                }
+                
+                if let error{
+                    print(error)
+                    //                completionHandler(.failure(.misc(error.localizedDescription)))
+                    return
+                }
+                
+                do{
                     DispatchQueue.main.async {
-                        self.posts = self.model.result.map { $0 }
+                        print("in mainthread")
+                        
+                        self.coinListVM = try! JSONDecoder().decode([coin].self, from: data!)
+                        print(self.coinListVM.count)
+                        
                     }
                     
-                case .failure(let error):
-                    print(error.localizedDescription)
                 }
-            }
+            }.resume()
         }
+        
+        
+        //        func loadCoins(completionHandler: @escaping (Result<Array<coin>, Error>) -> Void){
+        //            model.setBusy(state: true)
+        //            print("in loadCOins")
+        //
+        ////            DispatchQueue.global(qos: .background).async {
+        //                print("and here")
+        //            CoinModel.fetchCoins(coinURL: self.coinURL){
+        //                    result in
+        //
+        //                    switch result{
+        //                    case .success(let coinLi):
+        //                        print("in success")
+        //                        completionHandler(.success(self.coinListVM = coinLi))
+        //
+        //                    case .failure():
+        //                        print("in failure")
+        //                        completionHandler(.failure(Error))
+        //                    }
+        //
+        //
+        //                }
+        ////                print(test.count)
+        //                print("after test")
+        ////            }
+        //
+        //
+        //
+        //        }
+        //
+        //        func setCoinList(){
+        //
+        //            DispatchQueue.main.async {
+        //                print("schon am zuweisen")
+        ////                self.coinListVM = test
+        //            }
+        //        }
+        
     }
+    
+    
+    
 }

@@ -8,9 +8,14 @@
 import Foundation
 
 //beispiel code von Ingo
-struct DummyPostStructure: Identifiable, Codable {
-    let userId: Int
+struct DummyPingStructure: Identifiable, Codable {
     let id: Int
-    let title: String
-    let body: String
+    let text: String
+
+}
+
+struct coin: Identifiable, Codable{
+    let id: String
+    let symbol: String
+    let name: String
 }
