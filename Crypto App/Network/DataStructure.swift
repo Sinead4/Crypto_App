@@ -2,12 +2,11 @@
 //  DataStructure.swift
 //  Crypto App
 //
-//  Created by Sinead on 22.12.22.
+//  Created by Sinead on 19.01.23.
 //
 
 import Foundation
 
-//beispiel code von Ingo
 struct DummyPingStructure: Identifiable, Codable {
     let id: Int
     let text: String
