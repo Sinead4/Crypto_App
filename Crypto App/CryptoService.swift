@@ -22,8 +22,5 @@ class CryptoService{
         let result = try await NetworkService.load(from: coinURLRequest, convertTo: [coin].self)
         
         return result
-        
     }
-
-    
 }
