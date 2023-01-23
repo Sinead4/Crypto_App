@@ -9,19 +9,21 @@ import Foundation
 
 class ViewModel: ObservableObject {
     @Published var coinListVM: [coin] = []
+    
     var model = Model()
 
-    
     func loadCoins(){
-        
         Task{
             do{
-                self.coinListVM = try await model.getCoinList()
-//                self.coinListVM = try! JSONDecoder().decode([coin].self, from: data!)
-                print(self.coinListVM.count)
+                let coinList = try await model.getCoinList()
+                
+                DispatchQueue.main.async {
+                    self.coinListVM = coinList
+                }
+                
+            } catch let error {
+                print(error.localizedDescription)
             }
         }
-        
-
     }
 }
