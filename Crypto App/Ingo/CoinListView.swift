@@ -17,32 +17,30 @@ struct CoinListView: View {
         VStack {
             Text("Crypto App")
             Text("is Busy?")
-            
-            //            if(viewModel.isBusy){
-            //                Text("Ja")
-            //            }else{
-            //                Text("Nein")
-            //            }
+
             
             //Search bar
             Text("Search by: ")
             
             //CryptoListe
-            List(viewModel.coinListVM){ coin in
+            List(viewModel.coinListMarket){ coin in
                 CoinCard(coin: coin)
-                Text("hi")
             }.onAppear(perform: viewModel.loadCoins)
                 .padding()
         }
     }
     
     struct CoinCard: View{
-        let coin: coin
+        let coin: CoinMarketElement
         
         var body: some View{
-            VStack{
-                Text(coin.name)
-                Text("Symbol " + coin.symbol)
+            HStack{
+
+                VStack{
+                    Text(coin.name)
+//                    Text(String(coin.currentPrice))
+                }
+                
                 
             }
         }
