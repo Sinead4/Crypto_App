@@ -25,25 +25,53 @@ struct CoinListView: View {
             //CryptoListe
             List(viewModel.coinListMarket){ coin in
                 CoinCard(coin: coin)
+                    .frame(      minWidth: 0,
+                                 maxWidth: .infinity,
+                                 minHeight: 0,
+                                 maxHeight: 50,
+                                 alignment: .leading)
+                    .background(Color.gray)
+                    .foregroundColor(Color.white)
+                    .cornerRadius(10)
+                    
             }.onAppear(perform: viewModel.loadCoins)
-                .padding()
+                .listStyle(.inset)
+                
+                
         }
     }
     
     struct CoinCard: View{
         let coin: CoinMarketElement
-        
+    
         var body: some View{
             HStack{
-
-                VStack{
-                    Text(coin.name)
-//                    Text(String(coin.currentPrice))
+                
+                AsyncImage(url: URL(string: coin.image)){ image in
+                    image.resizable()
+                        .scaledToFit()
+                        
+                }placeholder: {
+                    //test
                 }
                 
+
                 
-            }
+                VStack{
+                    Text(coin.name)
+                    Text(String(coin.symbol))
+                }
+                Spacer()
+                VStack{
+                    Text(String("$ \(coin.currentPrice)"))
+                    Text(String(" \(coin.priceChangePercentage24H) %"))
+                }
+                
+            } .cornerRadius(10)
+                .padding(10)
+
         }
+           
         
     }
     
