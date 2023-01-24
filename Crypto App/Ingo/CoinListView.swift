@@ -16,11 +16,45 @@ struct CoinListView: View {
     var body: some View {
         VStack {
             Text("Crypto App")
-            Text("is Busy?")
-
+            Spacer()
+            Text("Filter List").font(.system(size: 12))
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            //Search bar
-            Text("Search by: ")
+            HStack{
+                
+                HStack(spacing: 4){
+                    Text("Name")
+                    Image(systemName: "chevron.down")
+                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed) ? 1.0 : 0.0)
+                        .rotationEffect(Angle(degrees: viewModel.filterOption == .name ? 0 : 180))
+                }.onTapGesture {
+                    if viewModel.filterOption == .name {
+                        viewModel.filterOption = .namereversed
+                        viewModel.sortCoins(sort: .namereversed)
+                    }else {
+                        viewModel.filterOption = .name
+                        viewModel.sortCoins(sort: .name)
+                    }
+                }
+                
+                Spacer()
+                
+                HStack(spacing: 4){
+                    Text("Price")
+                    Image(systemName: "chevron.down")
+                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
+                        .rotationEffect(Angle(degrees: viewModel.filterOption == .price ? 0 : 180))
+                }.onTapGesture {
+                    if viewModel.filterOption == .price {
+                        viewModel.filterOption = .priceReversed
+                        viewModel.sortCoins(sort: .priceReversed)
+                    }else {
+                        viewModel.filterOption = .price
+                        viewModel.sortCoins(sort: .price)
+                    }
+                }
+            }
+            
             
             //CryptoListe
             List(viewModel.coinListMarket){ coin in

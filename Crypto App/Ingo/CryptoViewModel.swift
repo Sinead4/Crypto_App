@@ -13,6 +13,11 @@ import Foundation
         @Published var coinListVM: [coin] = []
         var model = Model()
         @Published var coinListMarket: [CoinMarketElement] = []
+        @Published var filterOption: FilterOption = .name
+        
+        enum FilterOption{
+             case name, namereversed, marketCap, marketCapReversed, price, priceReversed
+        }
 
         func loadCoins(){
             
@@ -27,10 +32,31 @@ import Foundation
                         
                     }
                     
+                                    
                 }
             }
             
             
         }
+    
+        
+    func sortCoins(sort: FilterOption){
+            switch sort{
+            case .name:
+                print("in .name")
+                coinListMarket.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
+            case .namereversed:
+                print("in .namereversed")
+                coinListMarket.sort(by: {$0.name.lowercased() > $1.name.lowercased()})
+            case .marketCap:
+                 coinListMarket.sort(by: {$0.marketCap < $1.marketCap})
+            case .marketCapReversed:
+                 coinListMarket.sort(by: {$0.marketCap > $1.marketCap})
+            case .price:
+                 coinListMarket.sort(by: {$0.currentPrice < $1.currentPrice})
+            case .priceReversed:
+                 coinListMarket.sort (by: {$0.currentPrice > $1.currentPrice})
+            }
+        }
+        
     }
-
