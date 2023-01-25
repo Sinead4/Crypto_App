@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 class MainViewModel: ObservableObject {
     
     let model = MainModel()
+    let background = Color(red: 0.09, green: 0.09, blue: 0.43)
     
     @Published var coinListMarket: [Coin] = []
     @Published var filterOption: FilterOption = .name

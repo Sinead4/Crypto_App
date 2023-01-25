@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		231ADE0B2981AFDA00A75276 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231ADE0A2981AFDA00A75276 /* ColorExtension.swift */; };
 		2329D02D294A1341009DF171 /* CryptoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2329D02C294A1341009DF171 /* CryptoApp.swift */; };
 		2329D031294A1343009DF171 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D030294A1343009DF171 /* Assets.xcassets */; };
 		2329D034294A1343009DF171 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D033294A1343009DF171 /* Preview Assets.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		231ADE0A2981AFDA00A75276 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		2329D029294A1341009DF171 /* Crypto App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crypto App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2329D02C294A1341009DF171 /* CryptoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoApp.swift; sourceTree = "<group>"; };
 		2329D030294A1343009DF171 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				232B4AC929793E3200B4E29B /* Network */,
 				2329D030294A1343009DF171 /* Assets.xcassets */,
 				2329D032294A1343009DF171 /* Preview Content */,
+				231ADE0A2981AFDA00A75276 /* ColorExtension.swift */,
 			);
 			path = "Crypto App";
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				232B4AC829793E1800B4E29B /* NetworkService.swift in Sources */,
 				6CF7D42E29812EAB00286DEB /* DetailViewModel.swift in Sources */,
 				6CF7D42F29812EAB00286DEB /* DetailModel.swift in Sources */,
+				231ADE0B2981AFDA00A75276 /* ColorExtension.swift in Sources */,
 				2329D02D294A1341009DF171 /* CryptoApp.swift in Sources */,
 				6CF7D43629812EB800286DEB /* MainModel.swift in Sources */,
 				232B4AD129793F1F00B4E29B /* DataStructure.swift in Sources */,
