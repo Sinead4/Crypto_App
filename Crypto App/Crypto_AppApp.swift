@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct Crypto_AppApp: App {
+    
     var body: some Scene {
         WindowGroup {
           //  CoinListView()
