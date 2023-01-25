@@ -56,7 +56,8 @@ struct Coin: Identifiable,Codable {
 }
 
 // MARK: - Prices
-struct Prices: Codable {
+struct Prices: Identifiable, Codable {
+    var id = UUID()
     let prices, marketCaps, totalVolumes: [[Double]]
 
     enum CodingKeys: String, CodingKey {
@@ -68,10 +69,9 @@ struct Prices: Codable {
 
 struct PriceItem: Identifiable, Codable {
     var id = UUID()
-    let price: Int
+    let price: Double
     var date: Date {
-        //print(Date(timeIntervalSince1970: Double(price) / 1000))
-        return Date(timeIntervalSince1970: Double(price) / 1000)
+        return Date(timeIntervalSince1970: Double(value) / 1000)
     }
     var dateAsString: String {
         let dateFormatter = DateFormatter()

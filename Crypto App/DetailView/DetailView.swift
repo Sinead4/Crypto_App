@@ -11,30 +11,32 @@ import Foundation
 
 struct DetailView: View {
     
-    let coin: Coin
-    
+    var coin: Coin
+
     @StateObject var detailVM = DetailViewModel()
     
     var body: some View {
         VStack() {
-            
-            Button(action: {detailVM.loadPrices(id: "bitcoin", from: 1674550000, to: 1674570012)}) {
+            //Debug
+            Button(action: {detailVM.loadPrices(id: coin.id, from: 1674550000, to: 1674570012)}) {
                 Text("Test")
             }
-            GraphView()
+            
+            GraphView(detailVM: detailVM, coin: coin)
             PickerView()
-            TableView()
-        }
+            TableView(coin: coin)
+        }.navigationTitle(coin.name)
     }
 }
 
 struct GraphView : View {
-    
+    var detailVM: DetailViewModel
+    var coin: Coin
     var body: some View {
-        Chart(items) { item in
+        Chart(detailVM.priceItems) { priceItem in
             AreaMark(
-                x: .value("X Achse", item.dateAsString),
-                y: .value("Y Achse", item.value)
+                x: .value("X Achse", priceItem.dateAsString),
+                y: .value("Y Achse", priceItem.value)
             ).foregroundStyle(Color.red.gradient)
         }.frame(height: 200).padding()
     }
@@ -53,23 +55,30 @@ struct PickerView: View {
 }
 
 struct TableView: View {
+    var coin: Coin
     var body: some View {
         List {
-            ForEach(specs) { spec in
-                TableItem(spec: spec)
-            }
+            TableItem(text: "Market Cap Rank:", value: String(Int(coin.marketCapRank)))
+            TableItem(text: "Market Cap:", value: "$ " + String(coin.marketCap))
+            TableItem(text: "Price:", value: "$ " + String(coin.currentPrice))
+            TableItem(text: "Available Supply:", value: String(Int(coin.circulatingSupply ?? 0.0)))
+            TableItem(text: "Total Supply:", value: String(Int(coin.totalSupply ?? 0)))
+            TableItem(text: "24H High:", value: "$ " + String(coin.high24H))
+            TableItem(text: "24H Low:", value: "$ " + String(coin.low24H))
+            TableItem(text: "24H Change:", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
         }
         .listStyle(.inset)
     }
 }
 
 struct TableItem: View {
-    var spec: Spec
+    var text: String
+    var value: String
     var body: some View {
         HStack() {
-            Text(spec.title)
+            Text(text)
             Spacer()
-            Text(spec.value)
+            Text(value)
         }
     }
 }

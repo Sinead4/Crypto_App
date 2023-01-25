@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 
 class DetailViewModel: ObservableObject {
     
     let model = DetailModel()
     
     @Published var prices: [Prices] = []
+    @Published var priceItems: [PriceItem] = []
     @Published var errorText: String?
-    
+        
     func loadPrices(id: String, from: Int, to: Int) {
         Task {
             do {
@@ -31,6 +33,16 @@ class DetailViewModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                     self.errorText = nil
                 }
+            }
+        }
+    }
+    
+    func convertPricesToPriceItem(prices: [Prices]) {
+        var priceItems: [PriceItem] = []
+        for price in prices {
+            for i in 0..<price.prices.count {
+                let priceItem = PriceItem(price: price.prices[i][1], value: price.marketCaps[i][0])
+                priceItems.append(priceItem)
             }
         }
     }
