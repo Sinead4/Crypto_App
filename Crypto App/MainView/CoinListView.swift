@@ -58,15 +58,17 @@ struct CoinListView: View {
             
             //CryptoListe
             List(viewModel.coinListMarket){ coin in
-                CoinCard(coin: coin)
-                    .frame(      minWidth: 0,
-                                 maxWidth: .infinity,
-                                 minHeight: 0,
-                                 maxHeight: 50,
-                                 alignment: .leading)
-                    .background(Color.gray)
-                    .foregroundColor(Color.white)
-                    .cornerRadius(10)
+                NavigationLink(destination: DetailView(coin: coin), label: {
+                    CoinCard(coin: coin)
+                        .frame(      minWidth: 0,
+                                     maxWidth: .infinity,
+                                     minHeight: 0,
+                                     maxHeight: 50,
+                                     alignment: .leading)
+                        .background(Color.gray)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(10)
+                })
                     
             }.onAppear(perform: viewModel.loadCoins)
                 .listStyle(.inset)

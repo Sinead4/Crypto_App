@@ -15,11 +15,11 @@ class CryptoService{
         }
     }
     
-    static func getCoinList() async throws -> [coin]{
+    static func getCoinList() async throws -> [Coin]{
         let coinURL = URL(string: "https://api.coingecko.com/api/v3/coins/list")!
         let coinURLRequest = URLRequest(url: coinURL)
         
-        let result = try await NetworkService.load(from: coinURLRequest, convertTo: [coin].self)
+        let result = try await NetworkService.load(from: coinURLRequest, convertTo: [Coin].self)
         
         return result
     }

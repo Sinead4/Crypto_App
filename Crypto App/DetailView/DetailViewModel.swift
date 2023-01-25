@@ -8,8 +8,7 @@
 import Foundation
 
 class DetailViewModel: ObservableObject {
-   // @Published var priceHistory: PriceHistory = []
-    
+  //  @Published var priceHistory: PriceHistory = []
     
     
     /*
@@ -23,16 +22,10 @@ class DetailViewModel: ObservableObject {
                 
                 let priceHistory = try await model.fetchPriceHistory(id: id, from: from, to: to)
                 DispatchQueue.main.async {
-                   //  self. = priceHistory // TODO
+                    self.priceHistory = priceHistory
                 }
-                
             }
         }
     }
-     
      */
-    
-        
-    
-    
 }

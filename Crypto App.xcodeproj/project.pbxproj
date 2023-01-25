@@ -116,8 +116,8 @@
 		6CF7D43029812EB800286DEB /* MainView */ = {
 			isa = PBXGroup;
 			children = (
-				6CF7D43129812EB800286DEB /* CryptoViewModel.swift */,
 				6CF7D43229812EB800286DEB /* CoinListView.swift */,
+				6CF7D43129812EB800286DEB /* CryptoViewModel.swift */,
 				6CF7D43329812EB800286DEB /* CryptoModel.swift */,
 			);
 			path = MainView;

@@ -10,7 +10,7 @@ import Foundation
 class Model {
     
     
-    func getCoinList() async throws -> [coin]{
+    func getCoinList() async throws -> [Coin]{
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = 100
         

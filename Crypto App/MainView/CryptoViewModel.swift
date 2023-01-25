@@ -10,8 +10,9 @@ import Foundation
     
     class ViewModel: ObservableObject {
         
-        @Published var coinListVM: [coin] = []
         var model = Model()
+        
+        @Published var coinListVM: [Coin] = []
         @Published var coinListMarket: [CoinMarketElement] = []
         @Published var filterOption: FilterOption = .name
         

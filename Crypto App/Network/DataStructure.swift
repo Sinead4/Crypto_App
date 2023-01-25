@@ -13,7 +13,7 @@ struct DummyPingStructure: Identifiable, Codable {
 
 }
 
-struct coin: Identifiable, Codable{
+struct Coin: Identifiable, Codable{
     let id: String
     let name: String
 }

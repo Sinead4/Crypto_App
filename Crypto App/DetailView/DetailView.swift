@@ -9,8 +9,10 @@ import SwiftUI
 import Charts
 import Foundation
 
-
 struct DetailView: View {
+    
+    let coin: CoinMarketElement
+    
     @StateObject var detailVM = DetailViewModel()
     
     var body: some View {
@@ -18,6 +20,7 @@ struct DetailView: View {
             GraphView()
             PickerView()
             TableView()
+            Text(coin.name)
         }
     }
 }
@@ -99,8 +102,11 @@ enum TimeInterval : String, CaseIterable {
 
 // MARK: - Preview
 
+
+/*
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
         DetailView()
     }
 }
+*/

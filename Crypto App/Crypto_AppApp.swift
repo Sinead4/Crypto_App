@@ -12,8 +12,9 @@ struct Crypto_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-          CoinListView()
-            //DetailView()
+            NavigationView {
+                CoinListView()
+            }
         }
     }
 }
