@@ -9,7 +9,7 @@ import Foundation
 
 
 protocol DataService {
-    static func load<T: Decodable>(
+     static func load<T: Decodable>(
         from request: URLRequest,
         convertTo type: T.Type) async throws -> T
 
@@ -17,7 +17,7 @@ protocol DataService {
 
 class NetworkService: DataService {
     
-    static func load<T: Decodable>(
+     static func load<T: Decodable>(
         from request: URLRequest,
         convertTo type: T.Type) async throws -> T
     {
@@ -33,10 +33,18 @@ class NetworkService: DataService {
     }
 }
 
+// MARK: - MockService
+
 class MockService: DataService {
-    static func load<T>(from request: URLRequest, convertTo type: T.Type) async throws -> T where T : Decodable {
-        throw NetworkError.noData
+     static func load<T>(from request: URLRequest, convertTo type: T.Type) async throws -> T where T: Decodable {
+        guard let fileName = request.url?.lastPathComponent,
+              let fileUrl = Bundle.main.url(forResource: fileName, withExtension: "json")
+        else {
+            throw NetworkError.noData
+        }
+        let data = try Data(contentsOf: fileUrl)
+        let decodedData = try JSONDecoder().decode(T.self, from: data)
+
+        return decodedData
     }
-    
-    
 }
