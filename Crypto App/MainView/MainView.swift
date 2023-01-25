@@ -8,10 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct CoinListView: View {
+struct MainView: View {
     
-    @StateObject var viewModel = ViewModel()
-    
+    @StateObject var viewModel = MainViewModel()    
     
     var body: some View {
         VStack {
@@ -69,29 +68,29 @@ struct CoinListView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(10)
                 })
-                    
+                
             }.onAppear(perform: viewModel.loadCoins)
                 .listStyle(.inset)
-                
-                
+            
+            
         }
     }
     
     struct CoinCard: View{
-        let coin: CoinMarketElement
-    
+        let coin: Coin
+        
         var body: some View{
             HStack{
                 
                 AsyncImage(url: URL(string: coin.image)){ image in
                     image.resizable()
                         .scaledToFit()
-                        
+                    
                 }placeholder: {
                     //test
                 }
                 
-
+                
                 
                 VStack{
                     Text(coin.name)
@@ -105,9 +104,9 @@ struct CoinListView: View {
                 
             } .cornerRadius(10)
                 .padding(10)
-
+            
         }
-           
+        
         
     }
     
@@ -115,7 +114,7 @@ struct CoinListView: View {
     
     struct ContentView_Previews: PreviewProvider {
         static var previews: some View {
-            CoinListView()
+            MainView()
         }
     }
 }

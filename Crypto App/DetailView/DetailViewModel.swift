@@ -8,24 +8,30 @@
 import Foundation
 
 class DetailViewModel: ObservableObject {
-  //  @Published var priceHistory: PriceHistory = []
     
+    let model = DetailModel()
     
-    /*
-    func loadPriceHistory(id: String, from: Int, to: Int) {
+    @Published var prices: [Prices] = []
+    @Published var errorText: String?
+    
+    func loadPrices(id: String, from: Int, to: Int) {
         Task {
             do {
-                guard let service = self.service else {
-                    throw NetworkError.misc("Service not specified")
-                }
-                let model = DetailModel(service: service)
-                
-                let priceHistory = try await model.fetchPriceHistory(id: id, from: from, to: to)
+                let prices = try await model.fetchPrices(id: id, from: from, to: to)
+                print(prices)
                 DispatchQueue.main.async {
-                    self.priceHistory = priceHistory
+                    self.prices = prices
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    if let error = error as? NetworkError {
+                        self.errorText = error.errDescription
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    self.errorText = nil
                 }
             }
         }
     }
-     */
 }

@@ -8,14 +8,9 @@
 import Foundation
 
 class DetailModel {
-    let service: DataService
-    
-    init(service: DataService) {
-        self.service = service
-    }
-    
-    func fetchPriceHistory(id: String, from: Int, to: Int) async throws -> PriceHistory {
-        let priceHistory = try await CryptoService.getPriceHistory(id: id, from: from, to: to)
-        return priceHistory
+
+    func fetchPrices(id: String, from: Int, to: Int) async throws -> [Prices] {
+        let prices = try await CryptoService.getPrices(id: id, from: from, to: to)
+        return prices
     }
 }

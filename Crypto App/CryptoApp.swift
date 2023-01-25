@@ -8,12 +8,12 @@
 import SwiftUI
 
 @main
-struct Crypto_AppApp: App {
+struct CryptoApp: App {
     
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                CoinListView()
+                MainView()
             }
         }
     }

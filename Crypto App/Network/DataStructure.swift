@@ -7,26 +7,8 @@
 
 import Foundation
 
-struct DummyPingStructure: Identifiable, Codable {
-    let id: Int
-    let text: String
-
-}
-
-struct Coin: Identifiable, Codable{
-    let id: String
-    let name: String
-}
-
-
-struct CoinMarketContainer: Codable{
-
-    var myCoinMarket: [CoinMarketElement]
-
-}
-
 // MARK: - CoinMarketElement
-struct CoinMarketElement: Identifiable,Codable {
+struct Coin: Identifiable,Codable {
     let id, symbol, name: String
     let image: String
     let currentPrice: Double
@@ -73,21 +55,22 @@ struct CoinMarketElement: Identifiable,Codable {
     
 }
 
-struct PriceHistory: Identifiable, Codable {
-    var id: Int
-    
-    
-    
-    
+// MARK: - Prices
+struct Prices: Codable {
+    let prices, marketCaps, totalVolumes: [[Double]]
 
+    enum CodingKeys: String, CodingKey {
+        case prices
+        case marketCaps = "market_caps"
+        case totalVolumes = "total_volumes"
+    }
 }
-
 
 struct PriceItem: Identifiable, Codable {
     var id = UUID()
     let price: Int
     var date: Date {
-        print(Date(timeIntervalSince1970: Double(price) / 1000))
+        //print(Date(timeIntervalSince1970: Double(price) / 1000))
         return Date(timeIntervalSince1970: Double(price) / 1000)
     }
     var dateAsString: String {
@@ -97,7 +80,6 @@ struct PriceItem: Identifiable, Codable {
     }
     let value: Double
 }
-
 
 
 struct Price {

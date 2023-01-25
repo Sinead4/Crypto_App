@@ -11,21 +11,25 @@ import Foundation
 
 struct DetailView: View {
     
-    let coin: CoinMarketElement
+    let coin: Coin
     
     @StateObject var detailVM = DetailViewModel()
     
     var body: some View {
         VStack() {
+            
+            Button(action: {detailVM.loadPrices(id: "bitcoin", from: 1674550000, to: 1674570012)}) {
+                Text("Test")
+            }
             GraphView()
             PickerView()
             TableView()
-            Text(coin.name)
         }
     }
 }
 
 struct GraphView : View {
+    
     var body: some View {
         Chart(items) { item in
             AreaMark(
@@ -54,7 +58,8 @@ struct TableView: View {
             ForEach(specs) { spec in
                 TableItem(spec: spec)
             }
-        }.listStyle(.inset)
+        }
+        .listStyle(.inset)
     }
 }
 
