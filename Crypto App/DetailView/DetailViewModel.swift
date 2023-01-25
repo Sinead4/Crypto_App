@@ -11,6 +11,8 @@ class DetailViewModel: ObservableObject {
    // @Published var priceHistory: PriceHistory = []
     
     
+    
+    /*
     func loadPriceHistory(id: String, from: Int, to: Int) {
         Task {
             do {
@@ -27,6 +29,8 @@ class DetailViewModel: ObservableObject {
             }
         }
     }
+     
+     */
     
         
     
