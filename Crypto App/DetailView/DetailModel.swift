@@ -9,8 +9,8 @@ import Foundation
 
 class DetailModel {
 
-    func fetchPrices(id: String, from: Int, to: Int) async throws -> [Prices] {
-        let prices = try await CryptoService.getPrices(id: id, from: from, to: to)
+    func fetchPrices(id: String, currency: String, days: Int) async throws -> Prices {
+        let prices = try await CryptoService.getPrices(id: id, currency: currency, days: days)
         return prices
     }
 }

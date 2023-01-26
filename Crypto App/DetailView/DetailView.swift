@@ -17,8 +17,9 @@ struct DetailView: View {
     
     var body: some View {
         VStack() {
+            
             //Debug
-            Button(action: {detailVM.loadPrices(id: coin.id, from: 1674550000, to: 1674570012)}) {
+            Button(action: {detailVM.loadPrices(id: "bitcoin", currency: "usd", days: 1)}) {
                 Text("Test")
             }
             

@@ -56,15 +56,14 @@ struct Coin: Identifiable,Codable {
 }
 
 // MARK: - Prices
-struct Prices: Identifiable, Codable {
-    var id = UUID()
+struct Prices: Codable {
     let prices, marketCaps, totalVolumes: [[Double]]
 
-    enum CodingKeys: String, CodingKey {
-        case prices
-        case marketCaps = "market_caps"
-        case totalVolumes = "total_volumes"
-    }
+        enum CodingKeys: String, CodingKey {
+            case prices
+            case marketCaps = "market_caps"
+            case totalVolumes = "total_volumes"
+        }
 }
 
 struct PriceItem: Identifiable, Codable {

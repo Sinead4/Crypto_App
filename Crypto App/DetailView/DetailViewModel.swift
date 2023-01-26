@@ -12,15 +12,14 @@ class DetailViewModel: ObservableObject {
     
     let model = DetailModel()
     
-    @Published var prices: [Prices] = []
+    @Published var prices = Prices(prices: [], marketCaps: [], totalVolumes: [])
     @Published var priceItems: [PriceItem] = []
     @Published var errorText: String?
         
-    func loadPrices(id: String, from: Int, to: Int) {
+    func loadPrices(id: String, currency: String, days: Int) {
         Task {
             do {
-                let prices = try await model.fetchPrices(id: id, from: from, to: to)
-                print(prices)
+                let prices = try await model.fetchPrices(id: id, currency: currency, days: days)
                 DispatchQueue.main.async {
                     self.prices = prices
                 }
