@@ -12,21 +12,22 @@ import Foundation
 struct DetailView: View {
     
     var coin: Coin
-
-    @StateObject var detailVM = DetailViewModel()
+    
+    @StateObject private var detailVM: DetailViewModel
+    
+    init(coin: Coin) {
+        self.coin = coin
+        _detailVM = StateObject(wrappedValue: DetailViewModel(id: coin.id, currency: "usd", days: 1))
+    }
     
     var body: some View {
-        VStack() {
-            
-            //Debug
-            Button(action: {detailVM.loadPrices(id: "bitcoin", currency: "usd", days: 1)}) {
-                Text("Test")
+        ScrollView {
+            VStack() {
+                GraphView(detailVM: detailVM, coin: coin)
+                PickerView()
+                TableView(coin: coin)
             }
-            
-            GraphView(detailVM: detailVM, coin: coin)
-            PickerView()
-            TableView(coin: coin)
-        }.navigationTitle(coin.name)
+        }.navigationBarTitle(coin.name, displayMode: .large)
     }
 }
 
@@ -40,6 +41,8 @@ struct GraphView : View {
                 y: .value("Y Achse", priceItem.value)
             ).foregroundStyle(Color.red.gradient)
         }.frame(height: 200).padding()
+        
+        Text(String(detailVM.prices.prices.count))
     }
 }
 
@@ -56,35 +59,81 @@ struct PickerView: View {
 }
 
 struct TableView: View {
+    private let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    private let spacing: CGFloat = 30
+    
     var coin: Coin
     var body: some View {
-        List {
-            TableItem(text: "Market Cap Rank:", value: String(Int(coin.marketCapRank)))
-            TableItem(text: "Market Cap:", value: "$ " + String(coin.marketCap))
-            TableItem(text: "Price:", value: "$ " + String(coin.currentPrice))
-            TableItem(text: "Available Supply:", value: String(Int(coin.circulatingSupply ?? 0.0)))
-            TableItem(text: "Total Supply:", value: String(Int(coin.totalSupply ?? 0)))
-            TableItem(text: "24H High:", value: "$ " + String(coin.high24H))
-            TableItem(text: "24H Low:", value: "$ " + String(coin.low24H))
-            TableItem(text: "24H Change:", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
-        }
-        .listStyle(.inset)
+        VStack(spacing: 20) {
+            overViewTitle
+            Divider()
+            overViewGrid
+            additionalTitle
+            Divider()
+            additionalGrid
+        }.padding()
     }
 }
 
-struct TableItem: View {
+struct DetailsItem: View {
     var text: String
     var value: String
     var body: some View {
-        HStack() {
-            Text(text)
+        VStack(alignment: .leading) {
+            Text(text).font(.caption).foregroundColor(Color.gray)
             Spacer()
-            Text(value)
+            Text(value).bold()
         }
     }
 }
 
- // MARK: - Mock Data
+extension TableView {
+    private var overViewTitle: some View {
+        Text("Overview")
+            .font(.title)
+            .bold()
+            .foregroundColor(Color.accentColor)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var additionalTitle: some View {
+        Text("Additional Details ")
+            .font(.title)
+            .bold()
+            .foregroundColor(Color.accentColor)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var overViewGrid: some View {
+        LazyVGrid(columns: columns,
+                  alignment: .leading,
+                  spacing: spacing,
+                  content: {
+            DetailsItem(text: "Price", value: "$ " + String(coin.currentPrice))
+            DetailsItem(text: "Market Cap", value: "$ " + String(Int(coin.marketCap)))
+            DetailsItem(text: "Rank", value: String(Int(coin.marketCapRank)))
+            DetailsItem(text: "Volume", value: String(Int(coin.totalVolume)))
+        })
+    }
+    
+    private var additionalGrid: some View {
+        LazyVGrid(columns: columns,
+                  alignment: .leading,
+                  spacing: spacing,
+                  content: {
+            DetailsItem(text: "24h High", value: "$ " + String(coin.high24H))
+            DetailsItem(text: "24h Low", value: "$ " + String(coin.low24H))
+            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
+            DetailsItem(text: "Available Supply:", value: String(Int(coin.circulatingSupply ?? 0.0)))
+        })
+    }
+}
+
+// MARK: - Mock Data
 let items: [PriceItem] = [
     PriceItem(price: 1674550374910, value: 23063.901776933366),
     PriceItem(price:  1674550519050, value:  23074.660478399),
@@ -119,9 +168,9 @@ enum TimeInterval : String, CaseIterable {
 
 
 /*
-struct DetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailView()
-    }
-}
-*/
+ struct DetailView_Previews: PreviewProvider {
+ static var previews: some View {
+ DetailView()
+ }
+ }
+ */

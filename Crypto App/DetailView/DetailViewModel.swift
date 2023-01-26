@@ -15,6 +15,11 @@ class DetailViewModel: ObservableObject {
     @Published var prices = Prices(prices: [], marketCaps: [], totalVolumes: [])
     @Published var priceItems: [PriceItem] = []
     @Published var errorText: String?
+    
+    
+    init(id: String, currency: String, days: Int) {
+        self.loadPrices(id: id, currency: currency, days: days)
+    }
         
     func loadPrices(id: String, currency: String, days: Int) {
         Task {
@@ -36,8 +41,10 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    func convertPricesToPriceItem(prices: [Prices]) {
-        var priceItems: [PriceItem] = []
+    
+    /*
+    func convertPricesToPriceItem(prices: Prices) {
+        var priceItems: PriceItem
         for price in prices {
             for i in 0..<price.prices.count {
                 let priceItem = PriceItem(price: price.prices[i][1], value: price.marketCaps[i][0])
@@ -45,4 +52,6 @@ class DetailViewModel: ObservableObject {
             }
         }
     }
+     
+     */
 }
