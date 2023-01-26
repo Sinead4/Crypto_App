@@ -27,18 +27,30 @@ struct DetailView: View {
                 PickerView()
                 TableView(coin: coin)
             }
-        }.navigationBarTitle(coin.name, displayMode: .large)
+        }.toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    Text(coin.name).bold().font(.title)
+                    AsyncImage(url: URL(string: coin.image)){ image in
+                        image.resizable().frame(width: 30, height: 30)
+                    }placeholder: {
+                        //test
+                    }
+                }
+            }
+        }
     }
 }
 
 struct GraphView : View {
     var detailVM: DetailViewModel
     var coin: Coin
+    
     var body: some View {
-        Chart(detailVM.priceItems) { priceItem in
+        Chart(items) { item in
             AreaMark(
-                x: .value("X Achse", priceItem.dateAsString),
-                y: .value("Y Achse", priceItem.value)
+                x: .value("X Achse", item.dateAsString),
+                y: .value("Y Achse", item.value)
             ).foregroundStyle(Color.red.gradient)
         }.frame(height: 200).padding()
         
@@ -59,14 +71,13 @@ struct PickerView: View {
 }
 
 struct TableView: View {
+    var coin: Coin
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
     private let spacing: CGFloat = 30
     
-    var coin: Coin
     var body: some View {
         VStack(spacing: 20) {
             overViewTitle
@@ -96,7 +107,6 @@ extension TableView {
         Text("Overview")
             .font(.title)
             .bold()
-            .foregroundColor(Color.accentColor)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
@@ -104,7 +114,6 @@ extension TableView {
         Text("Additional Details ")
             .font(.title)
             .bold()
-            .foregroundColor(Color.accentColor)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
