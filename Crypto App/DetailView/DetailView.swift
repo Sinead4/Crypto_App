@@ -10,32 +10,68 @@ import Charts
 import Foundation
 
 struct DetailView: View {
+    @State var coin: Coin
+    @State var prices: Prices = Prices(prices: [], marketCaps: [], totalVolumes: [])
+    @State var timeFrame: Int = 90
     
-    var coin: Coin
+    let model = DetailModel()
+
     
-    @StateObject private var detailVM: DetailViewModel
-    
-    init(coin: Coin) {
-        self.coin = coin
-        _detailVM = StateObject(wrappedValue: DetailViewModel(id: coin.id, currency: "usd", days: 1))
-    }
+    @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
     
     var body: some View {
         ScrollView {
             VStack() {
-                GraphView(detailVM: detailVM, coin: coin)
+                Text(String(prices.prices.count))
+                Button {
+                   timeFrame = timeFrame - 10
+                    Task {
+                        do {
+                            let prices = try await model.fetchPrices(id: coin.id, currency: "usd", days: timeFrame)
+                            DispatchQueue.main.async{
+                                //print(prices.prices.count)
+                                self.prices = prices
+                                detailVM.convertPricesToPriceItem(prices: prices)
+                                //print(detailVM.priceItems[0].price)
+                            }
+                        } catch {
+                            
+                        }
+                    }
+                    
+                } label: {
+                    Text("test")
+                }
+
+                
+                GraphView(coin: $coin, chartItems: $detailVM.priceItems)
                 PickerView()
-                TableView(coin: coin)
+                TableView(coin: $coin)
             }
-        }.toolbar {
+        }.onAppear {
+            timeFrame = 90
+            // TODO detailsVM verwenden
+            Task {
+                do {
+                    let prices = try await model.fetchPrices(id: coin.id, currency: "usd", days: timeFrame)
+                    DispatchQueue.main.async{
+                        //print(prices.prices.count)
+                        self.prices = prices
+                        detailVM.convertPricesToPriceItem(prices: prices)
+                        //print(detailVM.priceItems[0].price)
+                    }
+                } catch {
+                    
+                }
+            }
+        }
+        .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack {
                     Text(coin.name).bold().font(.title)
                     AsyncImage(url: URL(string: coin.image)){ image in
                         image.resizable().frame(width: 30, height: 30)
-                    }placeholder: {
-                        //test
-                    }
+                    } placeholder: {}
                 }
             }
         }
@@ -43,18 +79,22 @@ struct DetailView: View {
 }
 
 struct GraphView : View {
-    var detailVM: DetailViewModel
-    var coin: Coin
+    //var detailVM: DetailViewModel
+    @Binding var coin: Coin
+    @Binding var chartItems: [PriceItem]
     
     var body: some View {
-        Chart(items) { item in
+        Chart(chartItems) { item in
             AreaMark(
-                x: .value("X Achse", item.dateAsString),
-                y: .value("Y Achse", item.value)
+                x: .value("X Achse", item.date),
+                y: .value("Y Achse", item.price)
             ).foregroundStyle(Color.red.gradient)
         }.frame(height: 200).padding()
+            .onAppear {
+                print(chartItems)
+            }
         
-        Text(String(detailVM.prices.prices.count))
+        //Text(String(detailVM.fetchedPrices.prices.count))
     }
 }
 
@@ -71,7 +111,7 @@ struct PickerView: View {
 }
 
 struct TableView: View {
-    var coin: Coin
+    @Binding var coin: Coin
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -80,12 +120,12 @@ struct TableView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            overViewTitle
+            overviewTitle
             Divider()
-            overViewGrid
-            additionalTitle
+            overviewGrid
+            detailsTitle
             Divider()
-            additionalGrid
+            detailsGrid
         }.padding()
     }
 }
@@ -103,21 +143,21 @@ struct DetailsItem: View {
 }
 
 extension TableView {
-    private var overViewTitle: some View {
+    private var overviewTitle: some View {
         Text("Overview")
             .font(.title)
             .bold()
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var additionalTitle: some View {
-        Text("Additional Details ")
+    private var detailsTitle: some View {
+        Text("Details ")
             .font(.title)
             .bold()
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var overViewGrid: some View {
+    private var overviewGrid: some View {
         LazyVGrid(columns: columns,
                   alignment: .leading,
                   spacing: spacing,
@@ -129,7 +169,7 @@ extension TableView {
         })
     }
     
-    private var additionalGrid: some View {
+    private var detailsGrid: some View {
         LazyVGrid(columns: columns,
                   alignment: .leading,
                   spacing: spacing,
@@ -144,10 +184,10 @@ extension TableView {
 
 // MARK: - Mock Data
 let items: [PriceItem] = [
-    PriceItem(price: 1674550374910, value: 23063.901776933366),
-    PriceItem(price:  1674550519050, value:  23074.660478399),
-    PriceItem(price: 1674550934095, value:   23054.641168848542),
-    PriceItem(price: 1674551127192, value:  22985.47603666547),
+    PriceItem(price: 10.0, value: 1674550374910),
+    PriceItem(price:  11.0, value:  1674550519050),
+    PriceItem(price:   12.0, value: 1674550934095),
+    PriceItem(price:  13.0, value: 1674551127192),
 ]
 
 let specs: [Spec] = [
@@ -179,7 +219,8 @@ enum TimeInterval : String, CaseIterable {
 /*
  struct DetailView_Previews: PreviewProvider {
  static var previews: some View {
- DetailView()
+ 
+ DetailView(coin: .constant(Coin(id: "asdf", symbol: "asf", name: "sdf", image: "sdfgs", currentPrice: 4.3, marketCap: 2.3, marketCapRank: 6.4, totalVolume: 4.3, high24H: 4.3, low24H: 4.3, priceChange24H: 43.3, priceChangePercentage24H: 4.3, marketCapChange24H: 4.3, marketCapChangePercentage24H: 6.4, ath: 7.6, athChangePercentage: 3.5, athDate: "asd", atl: 5.3, atlChangePercentage: 3.3, atlDate: "4adf", lastUpdated: "asdf")))
  }
  }
  */
