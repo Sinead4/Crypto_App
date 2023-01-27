@@ -12,12 +12,12 @@ struct MainView: View {
     @StateObject var viewModel = MainViewModel()
     
     var body: some View {
-        VStack {
-            FilterOptions().environmentObject(viewModel)
-            CryptoList().environmentObject(viewModel)
-        }.background(Color.theme.background)
-         .navigationTitle("Market")
-    }
+            VStack {
+                FilterOptions().environmentObject(viewModel)
+                CryptoList().environmentObject(viewModel)
+            }.background(Color.theme.background)
+                .navigationTitle("Market")
+        }
 }
 
 struct FilterOptions: View {
@@ -89,9 +89,10 @@ struct CryptoList: View {
     var body: some View {
         List(viewModel.coinList){ coin in
             NavigationLink(destination: DetailView(coin: coin),
-                           label: { CoinCard(coin: coin).frame(maxHeight: 50)})
+                           label: { CoinCard(coin: coin).frame(maxHeight: 50)}).listRowBackground(Color.theme.background)
         }.onAppear(perform: viewModel.loadCoins)
-         .listStyle(PlainListStyle())
+            .listStyle(.inset)
+            .scrollContentBackground(.hidden)
     }
 }
 

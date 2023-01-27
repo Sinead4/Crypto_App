@@ -166,15 +166,3 @@ extension TableView {
         })
     }
 }
-
-// MARK: - Preview
-
-
-/*
- struct DetailView_Previews: PreviewProvider {
- static var previews: some View {
- 
- DetailView(coin: .constant(Coin(id: "asdf", symbol: "asf", name: "sdf", image: "sdfgs", currentPrice: 4.3, marketCap: 2.3, marketCapRank: 6.4, totalVolume: 4.3, high24H: 4.3, low24H: 4.3, priceChange24H: 43.3, priceChangePercentage24H: 4.3, marketCapChange24H: 4.3, marketCapChangePercentage24H: 6.4, ath: 7.6, athChangePercentage: 3.5, athDate: "asd", atl: 5.3, atlChangePercentage: 3.3, atlDate: "4adf", lastUpdated: "asdf")))
- }
- }
- */
