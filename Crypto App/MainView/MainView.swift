@@ -57,7 +57,8 @@ struct MainView: View {
             
             //CryptoListe
             List(viewModel.coinListMarket){ coin in
-                NavigationLink(destination: DetailView(coin: coin), label: {
+                NavigationLink(destination: DetailView(coin: coin),
+                               label: {
                     CoinCard(coin: coin)
                         .frame(      minWidth: 0,
                                      maxWidth: .infinity,

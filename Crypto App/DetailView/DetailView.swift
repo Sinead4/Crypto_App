@@ -11,31 +11,36 @@ import Foundation
 
 struct DetailView: View {
     @State var coin: Coin
-    @State var timeFrame: Int = 90
+    @State var chosenTimeInterval: TimeInterval = .oneYear
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
     
     var body: some View {
         ScrollView {
             VStack() {
-                Text(String(detailVM.fetchedPrices.prices.count))
-                Button {
-                    timeFrame = timeFrame - 10
-                    Task {
-                        try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
-                    }
-                } label: {
-                    Text("test")
-                }
+                //Text(String(detailVM.fetchedPrices.prices.count))
+                /*
+                 Button {
+                 timeFrame = timeFrame - 10
+                 Task {
+                 try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
+                 }
+                 } label: {
+                 Text("test")
+                 }
+                 */
+                //Text(String($chosenTimeInterval.rawValue))
                 GraphView(coin: $coin, chartItems: $detailVM.priceChartItems)
-                PickerView()
+                PickerView(coin: $coin, chosenTimeInterval: $chosenTimeInterval).environmentObject(detailVM)
                 TableView(coin: $coin)
             }
         }.onAppear {
-            timeFrame = 90
+            //chosenTimeInterval = .oneDay
+            
             Task {
-                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
+                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: chosenTimeInterval.rawValue)
             }
+            
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -54,34 +59,52 @@ struct GraphView : View {
     @Binding var coin: Coin
     @Binding var chartItems: [ChartPrice]
     
+    var gradient = LinearGradient(gradient: Gradient(colors: [.pink, .clear]), startPoint: .top, endPoint: .bottom)
+    
     var body: some View {
         Chart(chartItems) { item in
             AreaMark(
                 x: .value("X Achse", item.date),
                 y: .value("Y Achse", item.price)
-            ).foregroundStyle(Color.red.gradient)
+            )
+            .interpolationMethod(.cardinal)
+            .foregroundStyle(gradient)
+            LineMark(
+                x: .value("X Achse", item.date),
+                y: .value("Y Achse", item.price)
+            )
+            .interpolationMethod(.cardinal)
+            .lineStyle(StrokeStyle(lineWidth: 1))
+            .foregroundStyle(Color.pink)
         }.frame(height: 200).padding()
     }
 }
 
 struct PickerView: View {
-    @State var chosenTimeInterval : TimeInterval = .oneDay
+    @Binding var coin: Coin
+    @Binding var chosenTimeInterval : TimeInterval
+    @EnvironmentObject var detailVM: DetailViewModel
     
     var body: some View {
         Picker("", selection: $chosenTimeInterval) {
             ForEach(TimeInterval.allCases, id: \.self) { option in
-                Text(option.rawValue)
+                Text(option.label)
             }
         }.pickerStyle(SegmentedPickerStyle()).padding()
+            .onTapGesture {
+                // TODO - FIX
+                //chosenTimeInterval = $chosenTimeInterval.wrappedValue
+                Task {
+                    try await detailVM.loadPrices(id: coin.id, currency: "usd", days: chosenTimeInterval.rawValue)
+                }
+            }
     }
 }
 
 struct TableView: View {
     @Binding var coin: Coin
-    private let columns: [GridItem] = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    
+    private let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible())]
     private let spacing: CGFloat = 30
     
     var body: some View {
@@ -146,37 +169,6 @@ extension TableView {
             DetailsItem(text: "Available Supply:", value: String(Int(coin.circulatingSupply ?? 0.0)))
         })
     }
-}
-
-// MARK: - Mock Data
-let items: [ChartPrice] = [
-    ChartPrice(price: 10.0, unixTime: 1674550374910),
-    ChartPrice(price:  11.0, unixTime:  1674550519050),
-    ChartPrice(price:   12.0, unixTime: 1674550934095),
-    ChartPrice(price:  13.0, unixTime: 1674551127192),
-]
-
-let specs: [Spec] = [
-    Spec(title: "Market Cap Rank:", value: "1"),
-    Spec(title: "Market Cap:", value: "$809434"),
-    Spec(title: "Price:", value: "$8434"),
-]
-
-struct Spec: Identifiable {
-    var id = UUID()
-    let title: String
-    let value: String
-}
-
-
-enum TimeInterval : String, CaseIterable {
-    case oneDay = "1D"
-    case oneWeek = "7D"
-    case oneMonth = "1M"
-    case threeMonths = "3M"
-    case oneYear = "1Y"
-    case twoYears = "2Y"
-    case fiveYears = "5Y"
 }
 
 // MARK: - Preview
