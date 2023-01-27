@@ -12,23 +12,17 @@ class DetailViewModel: ObservableObject {
     
     let model = DetailModel()
     
-    @Published var fetchedPrices = Prices(prices: [], marketCaps: [], totalVolumes: [])
-    @Published var priceItems: [PriceItem] = []
+    @Published var fetchedPrices = Price(prices: [], marketCaps: [], totalVolumes: [])
+    @Published var priceChartItems: [ChartPrice] = []
     @Published var errorText: String?
     
-    
-    /*
-    init(id: String, currency: String, days: Int) {
-        self.loadPrices(id: id, currency: currency, days: days)
-    }
-     */
-        
     public func loadPrices(id: String, currency: String, days: Int) async throws -> Void {
         Task {
             do {
                 let prices = try await model.fetchPrices(id: id, currency: currency, days: days)
                 DispatchQueue.main.async {
                     self.fetchedPrices = prices
+                    self.convertPricesToPriceChartItems(prices: prices)
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -43,11 +37,10 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    
-    public func convertPricesToPriceItem(prices: Prices) {
-        priceItems = []
+    public func convertPricesToPriceChartItems(prices: Price) {
+        priceChartItems = []
         for price in prices.prices {
-            priceItems.append(PriceItem(price: price[1], value: price[0]))
-            }
+            priceChartItems.append(ChartPrice(price: price[1], unixTime: price[0]))
         }
+    }
 }

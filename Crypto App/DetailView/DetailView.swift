@@ -11,58 +11,30 @@ import Foundation
 
 struct DetailView: View {
     @State var coin: Coin
-    @State var prices: Prices = Prices(prices: [], marketCaps: [], totalVolumes: [])
     @State var timeFrame: Int = 90
-    
-    let model = DetailModel()
-
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
     
     var body: some View {
         ScrollView {
             VStack() {
-                Text(String(prices.prices.count))
+                Text(String(detailVM.fetchedPrices.prices.count))
                 Button {
-                   timeFrame = timeFrame - 10
+                    timeFrame = timeFrame - 10
                     Task {
-                        do {
-                            let prices = try await model.fetchPrices(id: coin.id, currency: "usd", days: timeFrame)
-                            DispatchQueue.main.async{
-                                //print(prices.prices.count)
-                                self.prices = prices
-                                detailVM.convertPricesToPriceItem(prices: prices)
-                                //print(detailVM.priceItems[0].price)
-                            }
-                        } catch {
-                            
-                        }
+                        try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
                     }
-                    
                 } label: {
                     Text("test")
                 }
-
-                
-                GraphView(coin: $coin, chartItems: $detailVM.priceItems)
+                GraphView(coin: $coin, chartItems: $detailVM.priceChartItems)
                 PickerView()
                 TableView(coin: $coin)
             }
         }.onAppear {
             timeFrame = 90
-            // TODO detailsVM verwenden
             Task {
-                do {
-                    let prices = try await model.fetchPrices(id: coin.id, currency: "usd", days: timeFrame)
-                    DispatchQueue.main.async{
-                        //print(prices.prices.count)
-                        self.prices = prices
-                        detailVM.convertPricesToPriceItem(prices: prices)
-                        //print(detailVM.priceItems[0].price)
-                    }
-                } catch {
-                    
-                }
+                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
             }
         }
         .toolbar {
@@ -79,9 +51,8 @@ struct DetailView: View {
 }
 
 struct GraphView : View {
-    //var detailVM: DetailViewModel
     @Binding var coin: Coin
-    @Binding var chartItems: [PriceItem]
+    @Binding var chartItems: [ChartPrice]
     
     var body: some View {
         Chart(chartItems) { item in
@@ -90,11 +61,6 @@ struct GraphView : View {
                 y: .value("Y Achse", item.price)
             ).foregroundStyle(Color.red.gradient)
         }.frame(height: 200).padding()
-            .onAppear {
-                print(chartItems)
-            }
-        
-        //Text(String(detailVM.fetchedPrices.prices.count))
     }
 }
 
@@ -183,11 +149,11 @@ extension TableView {
 }
 
 // MARK: - Mock Data
-let items: [PriceItem] = [
-    PriceItem(price: 10.0, value: 1674550374910),
-    PriceItem(price:  11.0, value:  1674550519050),
-    PriceItem(price:   12.0, value: 1674550934095),
-    PriceItem(price:  13.0, value: 1674551127192),
+let items: [ChartPrice] = [
+    ChartPrice(price: 10.0, unixTime: 1674550374910),
+    ChartPrice(price:  11.0, unixTime:  1674550519050),
+    ChartPrice(price:   12.0, unixTime: 1674550934095),
+    ChartPrice(price:  13.0, unixTime: 1674551127192),
 ]
 
 let specs: [Spec] = [

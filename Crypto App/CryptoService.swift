@@ -25,12 +25,12 @@ struct CryptoService{
         return request
     }
     
-    static func getPrices(id: String, currency: String, days: Int) async throws -> Prices {
+    static func getPrices(id: String, currency: String, days: Int) async throws -> Price {
             let url = URL(string: "https://api.coingecko.com/api/v3/coins/\(id)/market_chart?vs_currency=\(currency)&days=\(days)")!
             
             let localRequest = URLRequest(url: url)
         
-            let request = try await NetworkService.load(from: localRequest, convertTo: Prices.self)
+            let request = try await NetworkService.load(from: localRequest, convertTo: Price.self)
                     
         return request
         }

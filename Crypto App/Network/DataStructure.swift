@@ -56,7 +56,7 @@ struct Coin: Identifiable,Codable {
 }
 
 // MARK: - Prices
-struct Prices: Codable {
+struct Price: Codable {
     let prices, marketCaps, totalVolumes: [[Double]]
 
         enum CodingKeys: String, CodingKey {
@@ -66,24 +66,13 @@ struct Prices: Codable {
         }
 }
 
-struct PriceItem: Identifiable, Codable {
+
+// Only used for displaying price - chart
+struct ChartPrice: Identifiable, Codable {
     var id = UUID()
     let price: Double
     var date: Date {
-        return Date(timeIntervalSince1970: Double(value) / 1000)
+        return Date(timeIntervalSince1970: Double(unixTime) / 1000)
     }
-    var dateAsString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        return dateFormatter.string(from: date)
-    }
-    let value: Double
+    let unixTime: Double
 }
-
-
-struct Price {
-    let day: Date
-    var price: Int
-}
-
-
