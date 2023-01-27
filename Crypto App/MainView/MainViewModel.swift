@@ -13,7 +13,7 @@ class MainViewModel: ObservableObject {
     let model = MainModel()
     let background = Color(red: 0.09, green: 0.09, blue: 0.43)
     
-    @Published var coinListMarket: [Coin] = []
+    @Published var coinList: [Coin] = []
     @Published var filterOption: FilterOption = .name
     
     enum FilterOption{
@@ -25,7 +25,7 @@ class MainViewModel: ObservableObject {
             do{
                 let test = try await model.fetchCoins()
                 DispatchQueue.main.async {
-                    self.coinListMarket = test
+                    self.coinList = test
                 }
             }
         }
@@ -35,18 +35,18 @@ class MainViewModel: ObservableObject {
         switch sort{
         case .name:
             //print("in .name")
-            coinListMarket.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
+            coinList.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
         case .namereversed:
             //print("in .namereversed")
-            coinListMarket.sort(by: {$0.name.lowercased() > $1.name.lowercased()})
+            coinList.sort(by: {$0.name.lowercased() > $1.name.lowercased()})
         case .marketCap:
-            coinListMarket.sort(by: {$0.marketCap < $1.marketCap})
+            coinList.sort(by: {$0.marketCap < $1.marketCap})
         case .marketCapReversed:
-            coinListMarket.sort(by: {$0.marketCap > $1.marketCap})
+            coinList.sort(by: {$0.marketCap > $1.marketCap})
         case .price:
-            coinListMarket.sort(by: {$0.currentPrice < $1.currentPrice})
+            coinList.sort(by: {$0.currentPrice < $1.currentPrice})
         case .priceReversed:
-            coinListMarket.sort (by: {$0.currentPrice > $1.currentPrice})
+            coinList.sort (by: {$0.currentPrice > $1.currentPrice})
         }
     }
 }

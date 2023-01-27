@@ -12,18 +12,12 @@ struct MainView: View {
     
     @StateObject var viewModel = MainViewModel()
     
-    
     var body: some View {
         VStack {
-            Text("Crypto App") .foregroundColor(Color.white)
-            
-            Spacer(minLength: 25)
-            
             HStack{
                 HStack(spacing: 4){
                     Text("Rank")
                     Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
                         .rotationEffect(Angle(degrees: viewModel.filterOption == .marketCap ? 0 : 180))
                 }.onTapGesture {
                     if viewModel.filterOption == .marketCap {
@@ -40,7 +34,7 @@ struct MainView: View {
                 HStack(spacing: 4){
                     Text("Name")
                     Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
+                    //                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
                         .rotationEffect(Angle(degrees: viewModel.filterOption == .name ? 0 : 180))
                 }.onTapGesture {
                     if viewModel.filterOption == .name {
@@ -57,7 +51,7 @@ struct MainView: View {
                 HStack(spacing: 4){
                     Text("Price")
                     Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
+                    //                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
                         .rotationEffect(Angle(degrees: viewModel.filterOption == .price ? 0 : 180))
                 }.onTapGesture {
                     if viewModel.filterOption == .price {
@@ -68,87 +62,55 @@ struct MainView: View {
                         viewModel.sortCoins(sort: .price)
                     }
                 }
-            } .foregroundColor(Color.white)
+            }.padding()
+                .foregroundColor(Color.white)
                 .font(.system(size: 14))
-            
-                
             
             
             //CryptoListe
-            List(viewModel.coinListMarket){ coin in
+            List(viewModel.coinList){ coin in
                 NavigationLink(destination: DetailView(coin: coin),
                                label: {
-                    CoinCard(coin: coin)
-                        .frame(      minWidth: 0,
-                                     maxWidth: .infinity,
-                                     minHeight: 0,
-                                     maxHeight: 50,
-                                     alignment: .leading)
-                        .background(Color.theme.background)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                                                
+                    CoinCard(coin: coin).frame(maxHeight: 50)
                 })
                 
             }.onAppear(perform: viewModel.loadCoins)
-                .background(Color.theme.background)
                 .listStyle(PlainListStyle())
             
-            
         }.background(Color.theme.background)
+            .navigationTitle("Market")
     }
+}
+
+struct CoinCard: View{
+    let coin: Coin
     
-    struct CoinCard: View{
-        let coin: Coin
-        
-        var body: some View{
-            HStack(spacing: 0){
-                Text(String(format: "%.0f", coin.marketCapRank))
-                    .frame(minWidth: 30)
-                
+    var body: some View{
+        HStack{
+            HStack {
+                Text(String(format: "%.0f", coin.marketCapRank)).padding(.trailing)
                 AsyncImage(url: URL(string: coin.image)){ image in
-                    image.resizable()
-                        .scaledToFit()
-                    
-                }placeholder: {
-                    //test
-                }
-                
+                    image.resizable().frame(width: 30, height: 30)
+                }placeholder: {}
                 VStack(alignment: .leading){
                     Text(coin.name)
-                    Text(String(coin.symbol.uppercased()))
-                }.padding(.leading, 16)
-                
-                Spacer()
-                
-                VStack(alignment: .trailing){
-                    HStack{
-                        Text("$")
-                        Text(String(format: "%.2f",coin.currentPrice)).bold()
-                    }
-                    HStack{
-                        Text("$")
-                        Text(String(format: "%.2f",coin.priceChangePercentage24H))
-                    }
-
+                    Text(String(coin.symbol.uppercased())).font(.caption).foregroundColor(Color.gray)
                 }
-                
-            } .cornerRadius(10)
-                .padding(10)
-               
-
+            }
             
-        }
-        
-        
-    }
-    
-    // MARK: - ContentView_Previews
-    
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            MainView()
+            Spacer()
+            
+            VStack(alignment: .trailing){
+                Text(String(format: "%.2f",coin.currentPrice) + " $").bold()
+                Text(String(format: "%.2f",coin.priceChangePercentage24H) + " %").foregroundColor(Color.pink)
+            }
         }
     }
 }
 
+// MARK: - ContentView_Previews
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
+    }
+}

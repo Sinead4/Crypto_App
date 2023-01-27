@@ -18,7 +18,7 @@ struct DetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack() {
+            VStack {
                 //Text(String(detailVM.fetchedPrices.prices.count))
                 /*
                  Button {
@@ -53,6 +53,7 @@ struct DetailView: View {
                 }
             }
         }
+        .background(Color.theme.background)
     }
 }
 
@@ -157,8 +158,8 @@ extension TableView {
                   alignment: .leading,
                   spacing: spacing,
                   content: {
-            DetailsItem(text: "Price", value: "$ " + String(coin.currentPrice))
-            DetailsItem(text: "Market Cap", value: "$ " + String(Int(coin.marketCap)))
+            DetailsItem(text: "Price", value: String(coin.currentPrice) + " $")
+            DetailsItem(text: "Market Cap", value: String(Int(coin.marketCap)) + " $")
             DetailsItem(text: "Rank", value: String(Int(coin.marketCapRank)))
             DetailsItem(text: "Volume", value: String(Int(coin.totalVolume)))
         })
@@ -169,8 +170,8 @@ extension TableView {
                   alignment: .leading,
                   spacing: spacing,
                   content: {
-            DetailsItem(text: "24h High", value: "$ " + String(coin.high24H))
-            DetailsItem(text: "24h Low", value: "$ " + String(coin.low24H))
+            DetailsItem(text: "24h High", value: String(coin.high24H) + " $")
+            DetailsItem(text: "24h Low", value: String(coin.low24H) + " $")
             DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
             DetailsItem(text: "Available Supply", value: String(Int(coin.circulatingSupply ?? 0.0)))
         })
