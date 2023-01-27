@@ -52,27 +52,9 @@ struct Coin: Identifiable,Codable {
         case atlDate = "atl_date"
         case lastUpdated = "last_updated"
     }
-    
 }
 
-// MARK: - Prices
+// MARK: - Price
 struct Price: Codable {
-    let prices, marketCaps, totalVolumes: [[Double]]
-
-        enum CodingKeys: String, CodingKey {
-            case prices
-            case marketCaps = "market_caps"
-            case totalVolumes = "total_volumes"
-        }
-}
-
-
-// Only used for displaying price - chart
-struct ChartPrice: Identifiable, Codable {
-    var id = UUID()
-    let price: Double
-    var date: Date {
-        return Date(timeIntervalSince1970: Double(unixTime) / 1000)
-    }
-    let unixTime: Double
+    let prices: [[Double]]
 }

@@ -12,7 +12,7 @@ class DetailViewModel: ObservableObject {
     
     let model = DetailModel()
     
-    @Published var fetchedPrices = Price(prices: [], marketCaps: [], totalVolumes: [])
+    @Published var fetchedPrices = Price(prices: [])
     @Published var priceChartItems: [ChartPrice] = []
     @Published var errorText: String?
     
@@ -47,7 +47,7 @@ class DetailViewModel: ObservableObject {
 
 
 // MARK: - TimeInterval
-enum TimeInterval : Int, CaseIterable, Equatable {
+enum TimeInterval : Int, CaseIterable {
     case oneDay = 1
     case oneWeek = 7
     case oneMonth = 30
@@ -74,8 +74,14 @@ enum TimeInterval : Int, CaseIterable, Equatable {
             return "5Y"
         }
     }
-    
-    static func == (lhs: TimeInterval, rhs: TimeInterval) -> Bool {
-         return lhs.rawValue == rhs.rawValue
-     }
+}
+
+// MARK: - ChartPrice
+struct ChartPrice: Identifiable, Codable {
+    var id = UUID()
+    let price: Double
+    var date: Date {
+        return Date(timeIntervalSince1970: Double(unixTime) / 1000)
+    }
+    let unixTime: Double
 }
