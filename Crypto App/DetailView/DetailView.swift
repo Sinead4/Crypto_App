@@ -19,17 +19,6 @@ struct DetailView: View {
     var body: some View {
         ScrollView {
             VStack {
-                //Text(String(detailVM.fetchedPrices.prices.count))
-                /*
-                 Button {
-                 timeFrame = timeFrame - 10
-                 Task {
-                 try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeFrame)
-                 }
-                 } label: {
-                 Text("test")
-                 }
-                 */
                 Text(String(timeInterval))
                 GraphView(coin: $coin, chartItems: $detailVM.priceChartItems)
                 PickerView(coin: $coin, timeInterval: $timeInterval).environmentObject(detailVM)

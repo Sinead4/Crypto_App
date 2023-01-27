@@ -9,76 +9,89 @@ import Foundation
 import SwiftUI
 
 struct MainView: View {
-    
     @StateObject var viewModel = MainViewModel()
     
     var body: some View {
         VStack {
-            HStack{
-                HStack(spacing: 4){
-                    Text("Rank")
-                    Image(systemName: "chevron.down")
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .marketCap ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .marketCap {
-                        viewModel.filterOption = .marketCapReversed
-                        viewModel.sortCoins(sort: .marketCapReversed)
-                    }else {
-                        viewModel.filterOption = .marketCap
-                        viewModel.sortCoins(sort: .marketCap)
-                    }
-                }
-                
-                Spacer()
-                
-                HStack(spacing: 4){
-                    Text("Name")
-                    Image(systemName: "chevron.down")
-                    //                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .name ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .name {
-                        viewModel.filterOption = .namereversed
-                        viewModel.sortCoins(sort: .namereversed)
-                    }else {
-                        viewModel.filterOption = .name
-                        viewModel.sortCoins(sort: .name)
-                    }
-                }
-                
-                Spacer()
-                
-                HStack(spacing: 4){
-                    Text("Price")
-                    Image(systemName: "chevron.down")
-                    //                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .price ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .price {
-                        viewModel.filterOption = .priceReversed
-                        viewModel.sortCoins(sort: .priceReversed)
-                    }else {
-                        viewModel.filterOption = .price
-                        viewModel.sortCoins(sort: .price)
-                    }
-                }
-            }.padding()
-                .foregroundColor(Color.white)
-                .font(.system(size: 14))
-            
-            
-            //CryptoListe
-            List(viewModel.coinList){ coin in
-                NavigationLink(destination: DetailView(coin: coin),
-                               label: {
-                    CoinCard(coin: coin).frame(maxHeight: 50)
-                })
-                
-            }.onAppear(perform: viewModel.loadCoins)
-                .listStyle(PlainListStyle())
-            
+            FilterOptions().environmentObject(viewModel)
+            CryptoList().environmentObject(viewModel)
         }.background(Color.theme.background)
-            .navigationTitle("Market")
+         .navigationTitle("Market")
+    }
+}
+
+struct FilterOptions: View {
+    @EnvironmentObject var viewModel: MainViewModel
+    
+    var body: some View {
+        HStack {
+            FilterOptionItem(text: "Rank", filterOption: MainViewModel.FilterOption.marketCap, onTapGesture: {
+                
+                if viewModel.filterOption == .marketCap {
+                    viewModel.filterOption = .marketCapReversed
+                    viewModel.sortCoins(sort: .marketCapReversed)
+                }else {
+                    viewModel.filterOption = .marketCap
+                    viewModel.sortCoins(sort: .marketCap)
+                }
+            })
+            
+            Spacer()
+            
+            FilterOptionItem(text: "Name", filterOption: MainViewModel.FilterOption.name, onTapGesture: {
+                
+                if viewModel.filterOption == .name {
+                    viewModel.filterOption = .namereversed
+                    viewModel.sortCoins(sort: .namereversed)
+                }else {
+                    viewModel.filterOption = .name
+                    viewModel.sortCoins(sort: .name)
+                }
+            })
+            
+            Spacer()
+            
+            FilterOptionItem(text: "Price", filterOption: MainViewModel.FilterOption.price, onTapGesture: {
+                
+                if viewModel.filterOption == .price {
+                    viewModel.filterOption = .priceReversed
+                    viewModel.sortCoins(sort: .priceReversed)
+                }else {
+                    viewModel.filterOption = .price
+                    viewModel.sortCoins(sort: .price)
+                }
+            })
+        }.padding()
+    }
+}
+
+struct FilterOptionItem: View {
+    @EnvironmentObject var viewModel: MainViewModel
+    
+    var text: String
+    var filterOption: MainViewModel.FilterOption
+    var onTapGesture: () -> ()
+    
+    var body: some View {
+        HStack {
+            Text(text)
+            Image(systemName: "chevron.down")
+                .rotationEffect(Angle(degrees: viewModel.filterOption == filterOption ? 0 : 180))
+        }.onTapGesture {
+            onTapGesture()
+        }
+    }
+}
+
+struct CryptoList: View {
+    @EnvironmentObject var viewModel: MainViewModel
+    
+    var body: some View {
+        List(viewModel.coinList){ coin in
+            NavigationLink(destination: DetailView(coin: coin),
+                           label: { CoinCard(coin: coin).frame(maxHeight: 50)})
+        }.onAppear(perform: viewModel.loadCoins)
+         .listStyle(PlainListStyle())
     }
 }
 
