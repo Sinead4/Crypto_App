@@ -11,7 +11,8 @@ import Foundation
 
 struct DetailView: View {
     @State var coin: Coin
-    @State var chosenTimeInterval: TimeInterval = .oneYear
+    //@State var chosenTimeInterval: TimeInterval = .fiveYears
+    @State var timeInterval: Int = 1
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
     
@@ -29,16 +30,16 @@ struct DetailView: View {
                  Text("test")
                  }
                  */
-                //Text(String($chosenTimeInterval.rawValue))
+                Text(String(timeInterval))
                 GraphView(coin: $coin, chartItems: $detailVM.priceChartItems)
-                PickerView(coin: $coin, chosenTimeInterval: $chosenTimeInterval).environmentObject(detailVM)
+                PickerView(coin: $coin, timeInterval: $timeInterval).environmentObject(detailVM)
                 TableView(coin: $coin)
             }
         }.onAppear {
             //chosenTimeInterval = .oneDay
             
             Task {
-                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: chosenTimeInterval.rawValue)
+                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
             }
             
         }
@@ -67,37 +68,42 @@ struct GraphView : View {
                 x: .value("X Achse", item.date),
                 y: .value("Y Achse", item.price)
             )
-            .interpolationMethod(.cardinal)
             .foregroundStyle(gradient)
             LineMark(
                 x: .value("X Achse", item.date),
                 y: .value("Y Achse", item.price)
             )
-            .interpolationMethod(.cardinal)
             .lineStyle(StrokeStyle(lineWidth: 1))
             .foregroundStyle(Color.pink)
-        }.frame(height: 200).padding()
+        }.frame(height: 300).padding()
     }
 }
 
 struct PickerView: View {
     @Binding var coin: Coin
-    @Binding var chosenTimeInterval : TimeInterval
+    @State var chosenTimeInterval: TimeInterval = .oneMonth
+    //@Binding var chosenTimeInterval : TimeInterval
+    @Binding var timeInterval: Int
     @EnvironmentObject var detailVM: DetailViewModel
     
     var body: some View {
         Picker("", selection: $chosenTimeInterval) {
-            ForEach(TimeInterval.allCases, id: \.self) { option in
-                Text(option.label)
+            ForEach(TimeInterval.allCases, id: \.self) { chosenInterval in
+                Text(chosenInterval.label)
             }
-        }.pickerStyle(SegmentedPickerStyle()).padding()
-            .onTapGesture {
-                // TODO - FIX
-                //chosenTimeInterval = $chosenTimeInterval.wrappedValue
-                Task {
-                    try await detailVM.loadPrices(id: coin.id, currency: "usd", days: chosenTimeInterval.rawValue)
-                }
+        }.onReceive([self.chosenTimeInterval].publisher.first()) { (chosenInterval) in
+            print(String(chosenInterval.rawValue))
+            timeInterval = chosenInterval.rawValue
+            
+            
+            /*
+            Task {
+                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
             }
+             
+             */
+        }
+        .pickerStyle(SegmentedPickerStyle()).padding()
     }
 }
 
@@ -166,7 +172,7 @@ extension TableView {
             DetailsItem(text: "24h High", value: "$ " + String(coin.high24H))
             DetailsItem(text: "24h Low", value: "$ " + String(coin.low24H))
             DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
-            DetailsItem(text: "Available Supply:", value: String(Int(coin.circulatingSupply ?? 0.0)))
+            DetailsItem(text: "Available Supply", value: String(Int(coin.circulatingSupply ?? 0.0)))
         })
     }
 }

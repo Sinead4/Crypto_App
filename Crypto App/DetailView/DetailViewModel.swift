@@ -47,7 +47,7 @@ class DetailViewModel: ObservableObject {
 
 
 // MARK: - TimeInterval
-enum TimeInterval : Int, CaseIterable {
+enum TimeInterval : Int, CaseIterable, Equatable {
     case oneDay = 1
     case oneWeek = 7
     case oneMonth = 30
@@ -74,4 +74,8 @@ enum TimeInterval : Int, CaseIterable {
             return "5Y"
         }
     }
+    
+    static func == (lhs: TimeInterval, rhs: TimeInterval) -> Bool {
+         return lhs.rawValue == rhs.rawValue
+     }
 }
