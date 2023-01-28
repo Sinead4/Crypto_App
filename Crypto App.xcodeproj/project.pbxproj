@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		231ADE0B2981AFDA00A75276 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231ADE0A2981AFDA00A75276 /* ColorExtension.swift */; };
+		231ADE0F298526F100A75276 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231ADE0E298526F100A75276 /* NetworkMonitor.swift */; };
 		2329D02D294A1341009DF171 /* CryptoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2329D02C294A1341009DF171 /* CryptoApp.swift */; };
 		2329D031294A1343009DF171 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D030294A1343009DF171 /* Assets.xcassets */; };
 		2329D034294A1343009DF171 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2329D033294A1343009DF171 /* Preview Assets.xcassets */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		231ADE0A2981AFDA00A75276 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		231ADE0E298526F100A75276 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		2329D029294A1341009DF171 /* Crypto App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crypto App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2329D02C294A1341009DF171 /* CryptoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoApp.swift; sourceTree = "<group>"; };
 		2329D030294A1343009DF171 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				232B4AC729793E1800B4E29B /* NetworkService.swift */,
 				232B4ACA29793E4400B4E29B /* NetworkError.swift */,
 				232B4AD029793F1F00B4E29B /* DataStructure.swift */,
+				231ADE0E298526F100A75276 /* NetworkMonitor.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				232B4AD129793F1F00B4E29B /* DataStructure.swift in Sources */,
 				6CF7D43D29812FDA00286DEB /* CryptoService.swift in Sources */,
 				6CF7D43429812EB800286DEB /* MainViewModel.swift in Sources */,
+				231ADE0F298526F100A75276 /* NetworkMonitor.swift in Sources */,
 				6CF7D42D29812EAB00286DEB /* DetailView.swift in Sources */,
 				232B4ACB29793E4400B4E29B /* NetworkError.swift in Sources */,
 				6CF7D43529812EB800286DEB /* MainView.swift in Sources */,
@@ -347,6 +351,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crypto App/Preview Content\"";
+				DEVELOPMENT_TEAM = 5VGM7X38LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -375,6 +380,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crypto App/Preview Content\"";
+				DEVELOPMENT_TEAM = 5VGM7X38LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
