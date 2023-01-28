@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - NetworkError
 
-enum NetworkError: Error {
+enum NetworkError: LocalizedError {
     case decoding
     case internet
     case noData

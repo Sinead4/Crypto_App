@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 
 protocol DataService {
      static func load<T: Decodable>(

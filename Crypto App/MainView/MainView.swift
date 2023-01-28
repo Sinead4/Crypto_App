@@ -11,90 +11,116 @@ import SwiftUI
 struct MainView: View {
     
     @StateObject var viewModel = MainViewModel()
+    @ObservedObject var network = NetworkMonitor()
     
     
     var body: some View {
         VStack {
-            Text("Crypto App") .foregroundColor(Color.white)
             
-            Spacer(minLength: 25)
-            
-            HStack{
-                HStack(spacing: 4){
-                    Text("Rank")
-                    Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .marketCap ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .marketCap {
-                        viewModel.filterOption = .marketCapReversed
-                        viewModel.sortCoins(sort: .marketCapReversed)
-                    }else {
-                        viewModel.filterOption = .marketCap
-                        viewModel.sortCoins(sort: .marketCap)
-                    }
+            if($network.isNotConnected.wrappedValue){
+                
+                ZStack{
+                    Text("No internet connection").foregroundColor(Color.black)
+                }.alert(isPresented: $network.isNotConnected){
+                    Alert(title: Text("No Internet Connection"),
+                          primaryButton: .default(Text("Retry")){
+                        viewModel.loadCoins()
+                    },
+                          secondaryButton: .destructive(Text("Dissmiss")))
                 }
                 
-                Spacer()
+            }else{
+
+                Text("Crypto App") .foregroundColor(Color.white)
                 
-                HStack(spacing: 4){
-                    Text("Name")
-                    Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .name ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .name {
-                        viewModel.filterOption = .namereversed
-                        viewModel.sortCoins(sort: .namereversed)
-                    }else {
-                        viewModel.filterOption = .name
-                        viewModel.sortCoins(sort: .name)
+                Spacer(minLength: 25)
+                
+                HStack{
+                    HStack(spacing: 4){
+                        Text("Rank")
+                        Image(systemName: "chevron.down")
+                        //                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
+                            .rotationEffect(Angle(degrees: viewModel.filterOption == .marketCap ? 0 : 180))
+                    }.onTapGesture {
+                        if viewModel.filterOption == .marketCap {
+                            viewModel.filterOption = .marketCapReversed
+                            viewModel.sortCoins(sort: .marketCapReversed)
+                        }else {
+                            viewModel.filterOption = .marketCap
+                            viewModel.sortCoins(sort: .marketCap)
+                        }
                     }
-                }
-                
-                Spacer()
-                
-                HStack(spacing: 4){
-                    Text("Price")
-                    Image(systemName: "chevron.down")
-//                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
-                        .rotationEffect(Angle(degrees: viewModel.filterOption == .price ? 0 : 180))
-                }.onTapGesture {
-                    if viewModel.filterOption == .price {
-                        viewModel.filterOption = .priceReversed
-                        viewModel.sortCoins(sort: .priceReversed)
-                    }else {
-                        viewModel.filterOption = .price
-                        viewModel.sortCoins(sort: .price)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 4){
+                        Text("Name")
+                        Image(systemName: "chevron.down")
+                        //                        .opacity( (viewModel.filterOption == .name || viewModel.filterOption == .namereversed ) ? 1.0 : 0.0)
+                            .rotationEffect(Angle(degrees: viewModel.filterOption == .name ? 0 : 180))
+                    }.onTapGesture {
+                        if viewModel.filterOption == .name {
+                            viewModel.filterOption = .namereversed
+                            viewModel.sortCoins(sort: .namereversed)
+                        }else {
+                            viewModel.filterOption = .name
+                            viewModel.sortCoins(sort: .name)
+                        }
                     }
-                }
-            } .foregroundColor(Color.white)
-                .font(.system(size: 14))
-            
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 4){
+                        Text("Price")
+                        Image(systemName: "chevron.down")
+                        //                        .opacity( (viewModel.filterOption == .price || viewModel.filterOption == .priceReversed) ? 1.0 : 0.0)
+                            .rotationEffect(Angle(degrees: viewModel.filterOption == .price ? 0 : 180))
+                    }.onTapGesture {
+                        if viewModel.filterOption == .price {
+                            viewModel.filterOption = .priceReversed
+                            viewModel.sortCoins(sort: .priceReversed)
+                        }else {
+                            viewModel.filterOption = .price
+                            viewModel.sortCoins(sort: .price)
+                        }
+                    }
+                    Spacer().frame(width:22)
+                    
+                    Button {
+                        viewModel.loadCoins()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    
+                    Spacer().frame(width:15)
+                    
+                    
+                    
+                } .foregroundColor(Color.white)
+                    .font(.system(size: 14))
                 
-            
-            
-            //CryptoListe
-            List(viewModel.coinListMarket){ coin in
-                NavigationLink(destination: DetailView(coin: coin), label: {
-                    CoinCard(coin: coin)
-                        .frame(      minWidth: 0,
-                                     maxWidth: .infinity,
-                                     minHeight: 0,
-                                     maxHeight: 50,
-                                     alignment: .leading)
-                        .background(Color.theme.background)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                                                
-                })
                 
-            }.onAppear(perform: viewModel.loadCoins)
-                .background(Color.theme.background)
-                .listStyle(PlainListStyle())
-            
-            
-        }.background(Color.theme.background)
+                //CryptoListe
+                List(viewModel.coinListMarket){ coin in
+                    NavigationLink(destination: DetailView(coin: coin), label: {
+                        CoinCard(coin: coin)
+                            .frame(      minWidth: 0,
+                                         maxWidth: .infinity,
+                                         minHeight: 0,
+                                         maxHeight: 50,
+                                         alignment: .leading)
+                            .background(Color.theme.background)
+                            .foregroundColor(Color.white)
+                            .cornerRadius(10)
+                        
+                    })
+                    
+                }.onAppear(perform: viewModel.loadCoins)
+                    .background(Color.theme.background)
+                
+            }
+//                .background(Color.theme.background)
+        }
     }
     
     struct CoinCard: View{
@@ -126,8 +152,8 @@ struct MainView: View {
                         Text(String(format: "%.2f",coin.currentPrice)).bold()
                     }
                     HStack{
-                        Text("$")
                         Text(String(format: "%.2f",coin.priceChangePercentage24H))
+                        Text("%")
                     }
 
                 }

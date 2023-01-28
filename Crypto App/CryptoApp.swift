@@ -10,6 +10,12 @@ import SwiftUI
 @main
 struct CryptoApp: App {
     
+//    let networkMonitor = NetworkMonitor.shared
+//
+//    init() {
+//        networkMonitor.start()
+//    }
+    
     var body: some Scene {
         WindowGroup {
             NavigationView {
