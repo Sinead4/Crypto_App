@@ -26,21 +26,17 @@ class NetworkMonitor: ObservableObject{
     }
     
     func start(){
-        
         monitor.pathUpdateHandler = {path in
             DispatchQueue.main.async{
                 self.isNotConnected = path.status == .satisfied
                 print(self.isNotConnected)
             }
-            
         }
-        
         monitor.start(queue: queue)
     }
     
     func stop(){
         monitor.cancel()
     }
-
 }
 
