@@ -11,9 +11,22 @@ import SwiftUI
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
     @State var isLoading: Bool = true
+    @ObservedObject var network = NetworkMonitor()
     
     var body: some View {
         VStack {
+            if($network.isNotConnected.wrappedValue){
+                ZStack{
+                    Text("No internet connection").foregroundColor(Color.black)
+                }.alert(isPresented: $network.isNotConnected){
+                    Alert(title: Text("No Internet Connection"),
+                          primaryButton: .default(Text("Retry")){
+                        viewModel.loadCoins()
+                    },
+                          secondaryButton: .destructive(Text("Dissmiss")))
+                }
+            }
+            
             FilterOptions().environmentObject(viewModel)
             Divider()
             CryptoList(isLoading: $isLoading).environmentObject(viewModel)
