@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - CoinMarketElement
-struct Coin: Identifiable,Codable {
+struct Coin: Identifiable,Codable , Equatable{
     let id, symbol, name: String
     let image: String
     let currentPrice: Double
@@ -55,6 +55,6 @@ struct Coin: Identifiable,Codable {
 }
 
 // MARK: - Price
-struct Price: Codable {
+struct Price: Codable, Equatable {
     let prices: [[Double]]
 }
