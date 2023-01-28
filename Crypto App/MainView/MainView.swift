@@ -59,10 +59,10 @@ struct FilterOptions: View {
                 
                 if viewModel.filterOption == .marketCap {
                     viewModel.filterOption = .marketCapReversed
-                    viewModel.sortCoins(sort: .marketCapReversed)
+                    viewModel.sortCoins(coinList: viewModel.coinList ,sort: .marketCapReversed)
                 }else {
                     viewModel.filterOption = .marketCap
-                    viewModel.sortCoins(sort: .marketCap)
+                    viewModel.sortCoins(coinList: viewModel.coinList, sort: .marketCap)
                 }
             })
             
@@ -72,10 +72,10 @@ struct FilterOptions: View {
                 
                 if viewModel.filterOption == .name {
                     viewModel.filterOption = .namereversed
-                    viewModel.sortCoins(sort: .namereversed)
+                    viewModel.sortCoins(coinList: viewModel.coinList, sort: .namereversed)
                 }else {
                     viewModel.filterOption = .name
-                    viewModel.sortCoins(sort: .name)
+                    viewModel.sortCoins(coinList: viewModel.coinList, sort: .name)
                 }
             })
             
@@ -85,10 +85,10 @@ struct FilterOptions: View {
                 
                 if viewModel.filterOption == .price {
                     viewModel.filterOption = .priceReversed
-                    viewModel.sortCoins(sort: .priceReversed)
+                    viewModel.sortCoins(coinList: viewModel.coinList, sort: .priceReversed)
                 }else {
                     viewModel.filterOption = .price
-                    viewModel.sortCoins(sort: .price)
+                    viewModel.sortCoins(coinList: viewModel.coinList, sort: .price)
                 }
             })
         }.padding()

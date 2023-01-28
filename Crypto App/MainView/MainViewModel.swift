@@ -31,22 +31,20 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func sortCoins(sort: FilterOption){
+    func sortCoins(coinList:[Coin], sort: FilterOption){
         switch sort{
         case .name:
-            //print("in .name")
-            coinList.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
+            self.coinList.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
         case .namereversed:
-            //print("in .namereversed")
-            coinList.sort(by: {$0.name.lowercased() > $1.name.lowercased()})
+            self.coinList.sort(by: {$0.name.lowercased() > $1.name.lowercased()})
         case .marketCap:
-            coinList.sort(by: {$0.marketCap < $1.marketCap})
+            self.coinList.sort(by: {$0.marketCap < $1.marketCap})
         case .marketCapReversed:
-            coinList.sort(by: {$0.marketCap > $1.marketCap})
+            self.coinList.sort(by: {$0.marketCap > $1.marketCap})
         case .price:
-            coinList.sort(by: {$0.currentPrice < $1.currentPrice})
+            self.coinList.sort(by: {$0.currentPrice < $1.currentPrice})
         case .priceReversed:
-            coinList.sort (by: {$0.currentPrice > $1.currentPrice})
+            self.coinList.sort (by: {$0.currentPrice > $1.currentPrice})
         }
     }
 }
