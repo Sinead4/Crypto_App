@@ -20,7 +20,7 @@ class MainViewModel: ObservableObject {
         case name, namereversed, marketCap, marketCapReversed, price, priceReversed
     }
     
-    func loadCoins(){
+    func loadCoins() {
         Task{
             do{
                 let test = try await model.fetchCoins()

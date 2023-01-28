@@ -10,14 +10,30 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
+    @State var isLoading: Bool = true
     
     var body: some View {
-            VStack {
-                FilterOptions().environmentObject(viewModel)
-                CryptoList().environmentObject(viewModel)
-            }.background(Color.theme.background)
-                .navigationTitle("Market")
+        VStack {
+            FilterOptions().environmentObject(viewModel)
+            Divider()
+            CryptoList(isLoading: $isLoading).environmentObject(viewModel)
+            Spacer()
+        }.frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+        )
+        .background(Color.theme.background)
+        .navigationTitle("Market")
+        
+        .onAppear {
+            DispatchQueue.global().async {
+                viewModel.loadCoins()
+                DispatchQueue.main.async {
+                    isLoading = false
+                }
+            }
         }
+    }
 }
 
 struct FilterOptions: View {
@@ -85,27 +101,37 @@ struct FilterOptionItem: View {
 
 struct CryptoList: View {
     @EnvironmentObject var viewModel: MainViewModel
+    @Binding var isLoading: Bool
     
     var body: some View {
-        List(viewModel.coinList){ coin in
-            NavigationLink(destination: DetailView(coin: coin),
-                           label: { CoinCard(coin: coin).frame(maxHeight: 50)}).listRowBackground(Color.theme.background)
-        }.onAppear(perform: viewModel.loadCoins)
+        if isLoading {
+            ProgressView()
+        } else {
+            List(viewModel.coinList){ coin in
+                NavigationLink(destination: DetailView(coin: coin),
+                               label: { CoinCard(coin: coin, isLoading: $isLoading).frame(maxHeight: 50)}).listRowBackground(Color.theme.background)
+            }
             .listStyle(.inset)
             .scrollContentBackground(.hidden)
+        }
     }
 }
 
 struct CoinCard: View{
     let coin: Coin
+    @Binding var isLoading: Bool
     
     var body: some View{
         HStack{
             HStack {
                 Text(String(format: "%.0f", coin.marketCapRank)).padding(.trailing)
-                AsyncImage(url: URL(string: coin.image)){ image in
-                    image.resizable().frame(width: 30, height: 30)
-                }placeholder: {}
+                if isLoading {
+                    ProgressView()
+                } else {
+                    AsyncImage(url: URL(string: coin.image)){ image in
+                        image.resizable().frame(width: 30, height: 30)
+                    }placeholder: {}
+                }
                 VStack(alignment: .leading){
                     Text(coin.name)
                     Text(String(coin.symbol.uppercased())).font(.caption).foregroundColor(Color.gray)

@@ -10,8 +10,8 @@ import Charts
 import Foundation
 
 struct DetailView: View {
+    @State var isLoading: Bool = true
     @State var coin: Coin
-    //@State var chosenTimeInterval: TimeInterval = .fiveYears
     @State var timeInterval: Int = 1
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
@@ -20,17 +20,16 @@ struct DetailView: View {
         ScrollView {
             VStack {
                 Text(String(timeInterval))
-                GraphView(coin: $coin, chartItems: $detailVM.priceChartItems)
+                GraphView(coin: $coin, chartItems: $detailVM.priceChartItems, isLoading: $isLoading)
                 PickerView(coin: $coin, timeInterval: $timeInterval).environmentObject(detailVM)
                 TableView(coin: $coin)
             }
         }.onAppear {
-            //chosenTimeInterval = .oneDay
-            
+            isLoading = true
             Task {
                 try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
+                isLoading = false
             }
-            
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -49,22 +48,29 @@ struct DetailView: View {
 struct GraphView : View {
     @Binding var coin: Coin
     @Binding var chartItems: [ChartPrice]
+    @Binding var isLoading: Bool
     
     var gradient = LinearGradient(gradient: Gradient(colors: [.pink, .clear]), startPoint: .top, endPoint: .bottom)
     
     var body: some View {
-        Chart(chartItems) { item in
-            AreaMark(
-                x: .value("X Achse", item.date),
-                y: .value("Y Achse", item.price)
-            )
-            .foregroundStyle(gradient)
-            LineMark(
-                x: .value("X Achse", item.date),
-                y: .value("Y Achse", item.price)
-            )
-            .lineStyle(StrokeStyle(lineWidth: 1))
-            .foregroundStyle(Color.pink)
+        VStack {
+            if isLoading {
+                ProgressView()
+            } else {
+                Chart(chartItems) { item in
+                    AreaMark(
+                        x: .value("X Achse", item.date),
+                        y: .value("Y Achse", item.price)
+                    )
+                    .foregroundStyle(gradient)
+                    LineMark(
+                        x: .value("X Achse", item.date),
+                        y: .value("Y Achse", item.price)
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 1))
+                    .foregroundStyle(Color.pink)
+                }
+            }
         }.frame(height: 300).padding()
     }
 }
@@ -87,9 +93,9 @@ struct PickerView: View {
             
             
             /*
-            Task {
-                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
-            }
+             Task {
+             try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
+             }
              
              */
         }
@@ -162,7 +168,7 @@ extension TableView {
             DetailsItem(text: "24h High", value: String(coin.high24H) + " $")
             DetailsItem(text: "24h Low", value: String(coin.low24H) + " $")
             DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
-            DetailsItem(text: "Available Supply", value: String(Int(coin.circulatingSupply ?? 0.0)))
+            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChange24H) + " $")
         })
     }
 }
