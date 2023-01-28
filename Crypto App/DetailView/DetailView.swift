@@ -49,8 +49,17 @@ struct GraphView : View {
     @Binding var coin: Coin
     @Binding var chartItems: [ChartPrice]
     @Binding var isLoading: Bool
+    var isPositive: Bool {
+        guard let firstPrice = $chartItems.first?.price.wrappedValue,
+              let lastPrice = $chartItems.last?.price.wrappedValue else {
+            return false
+        }
+        return firstPrice < lastPrice
+    }
     
-    var gradient = LinearGradient(gradient: Gradient(colors: [.pink, .clear]), startPoint: .top, endPoint: .bottom)
+    var positiveGradient = LinearGradient(gradient: Gradient(colors: [.green, .clear]), startPoint: .top, endPoint: .bottom)
+    
+    var negativGradient = LinearGradient(gradient: Gradient(colors: [.pink, .clear]), startPoint: .top, endPoint: .bottom)
     
     var body: some View {
         VStack {
@@ -62,13 +71,13 @@ struct GraphView : View {
                         x: .value("X Achse", item.date),
                         y: .value("Y Achse", item.price)
                     )
-                    .foregroundStyle(gradient)
+                    .foregroundStyle(isPositive ? positiveGradient : negativGradient)
                     LineMark(
                         x: .value("X Achse", item.date),
                         y: .value("Y Achse", item.price)
                     )
                     .lineStyle(StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.pink)
+                    .foregroundStyle(isPositive ? Color.green : Color.pink)
                 }
             }
         }.frame(height: 300).padding()
@@ -77,7 +86,7 @@ struct GraphView : View {
 
 struct PickerView: View {
     @Binding var coin: Coin
-    @State var chosenTimeInterval: TimeInterval = .oneMonth
+    @State var chosenTimeInterval: TimeInterval = .oneYear
     //@Binding var chosenTimeInterval : TimeInterval
     @Binding var timeInterval: Int
     @EnvironmentObject var detailVM: DetailViewModel
@@ -134,6 +143,10 @@ struct DetailsItem: View {
 }
 
 extension TableView {
+    var isPositive: Bool {
+        return coin.priceChangePercentage24H > 0
+    }
+    
     private var overviewTitle: some View {
         Text("Overview")
             .font(.title)
@@ -167,8 +180,8 @@ extension TableView {
                   content: {
             DetailsItem(text: "24h High", value: String(coin.high24H) + " $")
             DetailsItem(text: "24h Low", value: String(coin.low24H) + " $")
-            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %")
-            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChange24H) + " $")
+            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChangePercentage24H) + " %").foregroundColor(isPositive ? Color.green : Color.pink)
+            DetailsItem(text: "24h Change", value: String(format:"%.2f", coin.priceChange24H) + " $").foregroundColor(isPositive ? Color.green : Color.pink)
         })
     }
 }

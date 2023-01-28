@@ -134,6 +134,9 @@ struct CryptoList: View {
 struct CoinCard: View{
     let coin: Coin
     @Binding var isLoading: Bool
+    var isPositive: Bool {
+        return coin.priceChangePercentage24H > 0
+    }
     
     var body: some View{
         HStack{
@@ -156,7 +159,7 @@ struct CoinCard: View{
             
             VStack(alignment: .trailing){
                 Text(String(format: "%.2f",coin.currentPrice) + " $").bold()
-                Text(String(format: "%.2f",coin.priceChangePercentage24H) + " %").foregroundColor(Color.pink)
+                Text(String(format: "%.2f",coin.priceChangePercentage24H) + " %").foregroundColor(isPositive ? Color.green : Color.pink)
             }
         }
     }

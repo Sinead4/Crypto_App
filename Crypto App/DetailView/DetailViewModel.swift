@@ -79,9 +79,9 @@ enum TimeInterval : Int, CaseIterable {
 // MARK: - ChartPrice
 struct ChartPrice: Identifiable, Codable {
     var id = UUID()
-    let price: Double
+    var price: Double
     var date: Date {
         return Date(timeIntervalSince1970: Double(unixTime) / 1000)
     }
-    let unixTime: Double
+    var unixTime: Double
 }
