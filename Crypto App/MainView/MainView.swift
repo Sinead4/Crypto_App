@@ -36,6 +36,7 @@ struct MainView: View {
     }
 }
 
+
 struct FilterOptions: View {
     @EnvironmentObject var viewModel: MainViewModel
     
