@@ -12,24 +12,29 @@ import Foundation
 struct DetailView: View {
     @State var isLoading: Bool = true
     @State var coin: Coin
-    @State var timeInterval: Int = 1
+    @State var timeInterval: Int = TimeInterval.oneMonth.rawValue
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
+    
+    func updateChart(){
+        Task {
+            isLoading = true
+            try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
+            DispatchQueue.main.async {
+                isLoading = false
+            }
+        }
+    }
     
     var body: some View {
         ScrollView {
             VStack {
-                Text(String(timeInterval))
                 GraphView(coin: $coin, chartItems: $detailVM.priceChartItems, isLoading: $isLoading)
-                PickerView(coin: $coin, timeInterval: $timeInterval).environmentObject(detailVM)
+                PickerView(coin: $coin, isLoading: $isLoading, timeInterval: $timeInterval).environmentObject(detailVM)
                 TableView(coin: $coin)
             }
         }.onAppear {
-            isLoading = true
-            Task {
-                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
-                isLoading = false
-            }
+            updateChart()
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -58,7 +63,6 @@ struct GraphView : View {
     }
     
     var positiveGradient = LinearGradient(gradient: Gradient(colors: [.green, .clear]), startPoint: .top, endPoint: .bottom)
-    
     var negativGradient = LinearGradient(gradient: Gradient(colors: [.pink, .clear]), startPoint: .top, endPoint: .bottom)
     
     var body: some View {
@@ -86,8 +90,8 @@ struct GraphView : View {
 
 struct PickerView: View {
     @Binding var coin: Coin
-    @State var chosenTimeInterval: TimeInterval = .oneYear
-    //@Binding var chosenTimeInterval : TimeInterval
+    @State var chosenTimeInterval: TimeInterval = .oneMonth
+    @Binding var isLoading: Bool
     @Binding var timeInterval: Int
     @EnvironmentObject var detailVM: DetailViewModel
     
@@ -96,18 +100,18 @@ struct PickerView: View {
             ForEach(TimeInterval.allCases, id: \.self) { chosenInterval in
                 Text(chosenInterval.label)
             }
-        }.onReceive([self.chosenTimeInterval].publisher.first()) { (chosenInterval) in
-            print(String(chosenInterval.rawValue))
+        }
+        .onChange(of: chosenTimeInterval, perform: { chosenInterval in
             timeInterval = chosenInterval.rawValue
             
-            
-            /*
-             Task {
-             try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
-             }
-             
-             */
-        }
+            Task {
+                isLoading = true
+                try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
+                DispatchQueue.main.async {
+                    isLoading = false
+                }
+            }
+        })
         .pickerStyle(SegmentedPickerStyle()).padding()
     }
 }

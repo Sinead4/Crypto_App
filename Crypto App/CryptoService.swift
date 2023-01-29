@@ -8,7 +8,7 @@
 import Foundation
 
 struct CryptoService{
-                
+    
     var httpMethod: String {
         switch self {
         default: return "GET"
@@ -26,12 +26,12 @@ struct CryptoService{
     }
     
     static func getPrices(id: String, currency: String, days: Int) async throws -> Price {
-            let url = URL(string: "https://api.coingecko.com/api/v3/coins/\(id)/market_chart?vs_currency=\(currency)&days=\(days)")!
-            
-            let localRequest = URLRequest(url: url)
+        let url = URL(string: "https://api.coingecko.com/api/v3/coins/\(id)/market_chart?vs_currency=\(currency)&days=\(days)")!
         
-            let request = try await NetworkService.load(from: localRequest, convertTo: Price.self)
-                    
+        let localRequest = URLRequest(url: url)
+        
+        let request = try await NetworkService.load(from: localRequest, convertTo: Price.self)
+        
         return request
-        }
+    }
 }
