@@ -1,10 +1,3 @@
-//
-//  Crypto_AppTests.swift
-//  Crypto_AppTests
-//
-//  Created by Sinead on 28.01.23.
-//
-
 @testable import Crypto_App
 import XCTest
 

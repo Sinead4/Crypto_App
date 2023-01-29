@@ -1,10 +1,3 @@
-//
-//  DetailView.swift
-//  Crypto App
-//
-//  Created by Jan Wälti on 23.01.23.
-//
-
 import SwiftUI
 import Charts
 import Foundation
@@ -15,17 +8,7 @@ struct DetailView: View {
     @State var timeInterval: Int = TimeInterval.oneMonth.rawValue
     
     @ObservedObject var detailVM: DetailViewModel = DetailViewModel()
-    
-    func updateChart(){
-        Task {
-            isLoading = true
-            try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
-            DispatchQueue.main.async {
-                isLoading = false
-            }
-        }
-    }
-    
+        
     var body: some View {
         ScrollView {
             VStack {
@@ -46,9 +29,23 @@ struct DetailView: View {
                 }
             }
         }
-        .background(Color.theme.background)
+        .background(Color("BackgroundColor"))
+    }
+    
+    // MARK: - updateChart
+
+    func updateChart(){
+        Task {
+            isLoading = true
+            try await detailVM.loadPrices(id: coin.id, currency: "usd", days: timeInterval)
+            DispatchQueue.main.async {
+                isLoading = false
+            }
+        }
     }
 }
+
+// MARK: - GraphView
 
 struct GraphView : View {
     @Binding var coin: Coin
@@ -88,6 +85,8 @@ struct GraphView : View {
     }
 }
 
+// MARK: - PickerView
+
 struct PickerView: View {
     @Binding var coin: Coin
     @State var chosenTimeInterval: TimeInterval = .oneMonth
@@ -116,6 +115,8 @@ struct PickerView: View {
     }
 }
 
+// MARK: - TableView
+
 struct TableView: View {
     @Binding var coin: Coin
     
@@ -134,6 +135,8 @@ struct TableView: View {
     }
 }
 
+// MARK: - DetailsItem
+
 struct DetailsItem: View {
     var text: String
     var value: String
@@ -145,6 +148,8 @@ struct DetailsItem: View {
         }
     }
 }
+
+// MARK: - TableView Extensions
 
 extension TableView {
     var isPositive: Bool {

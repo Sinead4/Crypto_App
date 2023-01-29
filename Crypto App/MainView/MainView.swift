@@ -1,10 +1,3 @@
-//
-//  CoinListView2.swift
-//  Crypto App
-//
-//  Created by Sinead on 19.01.23.
-//
-
 import Foundation
 import SwiftUI
 
@@ -15,22 +8,16 @@ struct MainView: View {
     
     var body: some View {
         VStack {
-            if($network.isNotConnected.wrappedValue){
-                ZStack{
-                    Text("No internet connection").foregroundColor(Color.black)
-                }.alert(isPresented: $network.isNotConnected){
-                    Alert(title: Text("No Internet Connection"),
-                          primaryButton: .default(Text("Retry")){
-                        Task {
-                            isLoading = true
-                            await viewModel.loadCoins()
-                            DispatchQueue.main.async {
-                                isLoading = false
-                            }
-                        }
-                    },
-                          secondaryButton: .destructive(Text("Dissmiss")))
+            if(NetworkMonitor.shared.isNotConnected){
+                GroupBox{
+                    HStack{
+                        Spacer()
+                        Text("No internet connection")
+                        Image(systemName: "wifi.exclamationmark").foregroundColor(.red)
+                        Spacer()
+                    }
                 }
+                .padding()
             }
             
             FilterOptions().environmentObject(viewModel)
@@ -38,24 +25,39 @@ struct MainView: View {
             Spacer()
             CryptoList(isLoading: $isLoading).environmentObject(viewModel)
                 .onAppear {
-                    Task {
-                        isLoading = true
-                        await viewModel.loadCoins()
-                        DispatchQueue.main.async {
-                            isLoading = false
-                        }
-                    }
+                    loadCoins()
                 }
             Spacer()
-        }.frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity
-        )
-        .background(Color.theme.background)
+        }
+        .background(Color("BackgroundColor"))
         .navigationTitle("Market")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    loadCoins()
+                } label: {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+            }
+        }
+    }
+    
+    // MARK: - loadCoins
+
+    func loadCoins() -> Void{
+        if(!NetworkMonitor.shared.isNotConnected){
+            Task {
+                isLoading = true
+                await viewModel.loadCoins()
+                DispatchQueue.main.async {
+                    isLoading = false
+                }
+            }
+        }
     }
 }
 
+// MARK: - FilterOptions
 
 struct FilterOptions: View {
     @EnvironmentObject var viewModel: MainViewModel
@@ -102,6 +104,8 @@ struct FilterOptions: View {
     }
 }
 
+// MARK: - FilterOptionItem
+
 struct FilterOptionItem: View {
     @EnvironmentObject var viewModel: MainViewModel
     
@@ -121,6 +125,7 @@ struct FilterOptionItem: View {
 }
 
 // MARK: - Cryptolist
+
 struct CryptoList: View {
     @EnvironmentObject var viewModel: MainViewModel
     @Binding var isLoading: Bool
@@ -131,13 +136,15 @@ struct CryptoList: View {
         } else {
             List(viewModel.coinList){ coin in
                 NavigationLink(destination: DetailView(coin: coin),
-                               label: { CoinCard(coin: coin).frame(maxHeight: 50)}).listRowBackground(Color.theme.background)
+                               label: { CoinCard(coin: coin).frame(maxHeight: 50)}).listRowBackground(Color("BackgroundColor"))
             }
             .listStyle(.inset)
             .scrollContentBackground(.hidden)
         }
     }
 }
+
+// MARK: - CoinCard
 
 struct CoinCard: View{
     let coin: Coin
@@ -149,9 +156,9 @@ struct CoinCard: View{
         HStack{
             HStack {
                 Text(String(format: "%.0f", coin.marketCapRank)).padding(.trailing)
-                    AsyncImage(url: URL(string: coin.image)){ image in
-                        image.resizable().frame(width: 30, height: 30)
-                    }placeholder: {}
+                AsyncImage(url: URL(string: coin.image)){ image in
+                    image.resizable().frame(width: 30, height: 30)
+                }placeholder: {}
                 VStack(alignment: .leading){
                     Text(coin.name)
                     Text(String(coin.symbol.uppercased())).font(.caption).foregroundColor(Color.gray)
@@ -169,6 +176,7 @@ struct CoinCard: View{
 }
 
 // MARK: - ContentView_Previews
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()

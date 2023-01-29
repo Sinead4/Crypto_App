@@ -1,10 +1,3 @@
-//
-//  DetailViewModel.swift
-//  Crypto App
-//
-//  Created by Jan Wälti on 24.01.23.
-//
-
 import Foundation
 import SwiftUI
 
@@ -15,6 +8,8 @@ class DetailViewModel: ObservableObject {
     @Published var fetchedPrices = Price(prices: [])
     @Published var priceChartItems: [ChartPrice] = []
     @Published var errorText: String?
+    
+    // MARK: - loadPrices
     
     public func loadPrices(id: String, currency: String, days: Int) async throws -> Void {
         Task {
@@ -37,6 +32,8 @@ class DetailViewModel: ObservableObject {
         }
     }
     
+    // MARK: - convertPricesToPriceChartItems
+    
     public func convertPricesToPriceChartItems(prices: Price) {
         priceChartItems = []
         for price in prices.prices {
@@ -45,8 +42,8 @@ class DetailViewModel: ObservableObject {
     }
 }
 
-
 // MARK: - TimeInterval
+
 enum TimeInterval : Int, CaseIterable {
     case oneDay = 1
     case oneWeek = 7
@@ -77,6 +74,7 @@ enum TimeInterval : Int, CaseIterable {
 }
 
 // MARK: - ChartPrice
+
 struct ChartPrice: Identifiable, Codable {
     var id = UUID()
     var price: Double

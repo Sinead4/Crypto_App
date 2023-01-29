@@ -1,10 +1,3 @@
-//
-//  DetailModel.swift
-//  Crypto App
-//
-//  Created by Jan Wälti on 24.01.23.
-//
-
 import Foundation
 
 class DetailModel {

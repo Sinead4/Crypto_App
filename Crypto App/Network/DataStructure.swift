@@ -1,13 +1,7 @@
-//
-//  DataStructure.swift
-//  Crypto App
-//
-//  Created by Sinead on 19.01.23.
-//
-
 import Foundation
 
 // MARK: - Coin
+
 struct Coin: Identifiable, Codable, Equatable{
     let id, symbol, name: String
     let image: String
@@ -31,6 +25,7 @@ struct Coin: Identifiable, Codable, Equatable{
 }
 
 // MARK: - Price
+
 struct Price: Codable, Equatable {
     let prices: [[Double]]
 }

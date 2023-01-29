@@ -1,35 +1,33 @@
-//
-//  CryptoViewModel.swift
-//  Crypto App
-//
-//  Created by Sinead on 19.01.23.
-//
-
 import Foundation
 import SwiftUI
 
 class MainViewModel: ObservableObject {
     
     let model = MainModel()
-    let background = Color(red: 0.09, green: 0.09, blue: 0.43)
     
     @Published var coinList: [Coin] = []
     @Published var filterOption: FilterOption = .name
+    
+    // MARK: - FilterOption
     
     enum FilterOption{
         case name, namereversed, marketCap, marketCapReversed, price, priceReversed
     }
     
+    // MARK: - loadCoins
+    
     func loadCoins() async {
         Task{
             do{
-                let test = try await model.fetchCoins()
+                let coins = try await model.fetchCoins()
                 DispatchQueue.main.async {
-                    self.coinList = test
+                    self.coinList = coins
                 }
             }
         }
     }
+    
+    // MARK: - sortCoins
     
     func sortCoins(coinList:[Coin], sort: FilterOption){
         switch sort{
